@@ -1,4 +1,4 @@
-import { AppState } from "./app-state";
+import { AppState, Student } from "./app-state";
 
 /** Logic for the people list on the left side of the UI. */
 export class PeopleController {
@@ -16,14 +16,15 @@ export class PeopleController {
   }
 
 
-  addStudent (alias: string) : HTMLElement {
+  addStudent (student: Student) : void {
     let tmp: HTMLTemplateElement = <HTMLTemplateElement> document.getElementById("student-template");
     let frag: DocumentFragment = <DocumentFragment>tmp.content.cloneNode(true)
-    let student: HTMLElement = <HTMLElement> frag.firstElementChild;
-    student.innerHTML = student.innerHTML.replace("${alias}", alias);
+    let stdElt: HTMLElement = <HTMLElement> frag.firstElementChild;
+    stdElt.innerHTML = stdElt.innerHTML.replace("${alias}", student.Alias);
+    stdElt.id = student.Alias;
 
     // Create button functions
-    let button = student.querySelector("i");
+    let button = stdElt.querySelector("i");
     button.addEventListener("click", () => {
       if (button.classList.contains("bi-person-plus")){
         this.addToGroup(student);
@@ -32,31 +33,40 @@ export class PeopleController {
       }
     });
     
-    this.list.appendChild(student);
-
-    return student;
+    this.list.appendChild(stdElt);
   }
 
-  addToGroup (student: HTMLElement) : void {    
-    this.list.insertBefore(student, this.groupBreak);
+  private getStudentElt(student: Student) : HTMLElement {
+    return this.list.querySelector(`#${student.Alias}`);
+  }
 
-    student.classList.add("in-group");
-    student.classList.remove('bg-white');
+  addToGroup (student: Student) : void {  
+    let elt: HTMLElement = this.getStudentElt(student);
+      
+    this.list.insertBefore(elt, this.groupBreak);
 
-    let button = student.querySelector("i");
+    elt.classList.add("in-group");
+    elt.classList.remove('bg-white');
+
+    let button = elt.querySelector("i");
     button.classList.remove("bi-person-plus");
     button.classList.add("bi-person-dash");
+
+    // TODO: modify appState
   }
 
-  removeFromGroup (student: HTMLElement) : void {
-    this.list.insertBefore(student, this.groupBreak);
-    this.list.insertBefore(this.groupBreak, student);
+  removeFromGroup (student: Student) : void {
+    let elt: HTMLElement = this.getStudentElt(student);
+    this.list.insertBefore(elt, this.groupBreak);
+    this.list.insertBefore(this.groupBreak, elt);
 
-    student.classList.add('bg-white');
-    student.classList.remove("in-group");
+    elt.classList.add('bg-white');
+    elt.classList.remove("in-group");
     
-    let button = student.querySelector("i");
+    let button = elt.querySelector("i");
     button.classList.remove("bi-person-dash");
     button.classList.add("bi-person-plus");
+
+    // TODO: modify appState
   }
 }
