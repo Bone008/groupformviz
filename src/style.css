@@ -1,5 +1,7 @@
+#people {
+  min-width: 200px;
+} 
 
-/** Placeholder code, feel free to replace. */
-body {
-  font-family: sans-serif;
+#people .in-group {
+  background-color: #72b998;
 }

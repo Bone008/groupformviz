@@ -3,6 +3,8 @@ import { DetailsController } from "./details";
 import { PeopleController } from "./people";
 import { VisualizationController } from "./visualization";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import './style.css';
 
 const DEBUG = true; // Can be pulled in from webpack env later.
