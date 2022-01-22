@@ -16,11 +16,13 @@ export interface Student {
   VizSkills: number;
   Statistics: number;
   Math: number;
+  Art: number;
   Computer: number;
   Programming: number;
   ComputerGraphics: number;
   Hci: number;
   Ux: number;
+  Communication: number;
   Collaboration: number; 
   Repository: number;
   ThesisStatus: string;
