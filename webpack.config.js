@@ -15,6 +15,10 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.csv$/i,
+        use: ['csv-loader'],
+      },
     ],
   },
   resolve: {
