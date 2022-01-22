@@ -14,27 +14,27 @@ export interface Student {
   RelevantCourses: string;
   Canvas: string;
   VizSkills: number;
-  StatisticsSkills: number;
-  MathsSkills: number;
-  ComputerUsageSkills: number;
-  ProgrammingSkills: number;
+  Statistics: number;
+  Math: number;
+  Art: number;
+  Computer: number;
+  Programming: number;
   ComputerGraphics: number;
   Hci: number;
   Ux: number;
+  Communication: number;
   Collaboration: number; 
   Repository: number;
   ThesisStatus: string;
   FiveYears: string
 }
 
+
 /** Shared global state between all controllers. */
 export class AppState {
-  students: Student[] = Data;
-  constructor() {
-    console.log(this.students)
+  readonly students: Student[] = Data
+  readonly selected: Student[] = []
 
-    var selected: Student[] = []
-  }
   // TODO: Add fields to store current students in group, selected student, ...
   // Maybe also functions like isInGroup(student).
 }
