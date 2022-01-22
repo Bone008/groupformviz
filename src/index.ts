@@ -1,13 +1,24 @@
-import * as d3 from 'd3';
+import { AppState } from "./app-state";
+import { DetailsController } from "./details";
+import { PeopleController } from "./people";
+import { VisualizationController } from "./visualization";
 
-// Sample code, feel free to delete.
-function component() {
-  const maxNumber = d3.max([12, 42, 5, 11, 3]);
+const DEBUG = true; // Can be pulled in from webpack env later.
 
-  const element: HTMLDivElement = document.createElement('div');
-  element.innerText = `Hello world, the max number is ${maxNumber}!`;
+function init() {
+  const appState = new AppState();
+  const peopleController = new PeopleController(document.querySelector('#people'), appState);
+  const detailsController = new DetailsController(document.querySelector('#raw-data'), appState);
+  const visualizationController = new VisualizationController(document.querySelector('#visuals'), appState);
 
-  return element;
+  if(DEBUG) {
+    // Declare globally to allow convenient access from dev tools.
+    const win = <any>window;
+    win.appState = appState;
+    win.peopleController = peopleController;
+    win.detailsController = detailsController;
+    win.visualizationController = visualizationController;
+  }
 }
 
-document.body.appendChild(component());
+document.addEventListener('DOMContentLoaded', init);
