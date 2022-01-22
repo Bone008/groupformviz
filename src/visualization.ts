@@ -18,6 +18,14 @@ export class VisualizationController {
     });
     this.setSelectedSkill(skillSelect.value);
     this.renderHistogram();
+
+    // Proof-of-concept to run code whenever the selection changes.
+    const debugTextEl = document.createElement('p');
+    element.appendChild(debugTextEl);
+    this.appState.observeSelected(() => {
+      const names = this.appState.selected.map(s => s.Alias);
+      debugTextEl.textContent = `Selected from VisController: ${names.join(', ')}`;
+    });
   }
 
   private setSelectedSkill(newValue: string) {

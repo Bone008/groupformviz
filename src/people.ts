@@ -61,7 +61,7 @@ export class PeopleController {
     button.classList.add("bi-person-dash");
 
     // Add student to AppState
-    this.appState.selected.push(student);
+    this.appState.addSelectedStudent(student);
   }
 
   removeFromGroup (student: Student) : void {
@@ -77,8 +77,6 @@ export class PeopleController {
     button.classList.add("bi-person-plus");
 
     // Remove student from AppState
-    this.appState.selected = this.appState.selected.filter((v, i) => {
-      return v.Alias != student.Alias;
-    });
+    this.appState.removeSelectedStudent(student);
   }
 }
