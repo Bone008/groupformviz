@@ -29,14 +29,12 @@ export interface Student {
   FiveYears: string
 }
 
+
 /** Shared global state between all controllers. */
 export class AppState {
-  constructor() {
-    var students: Student[] = Data;
-    console.log(students)
+  readonly students: Student[] = Data
+  readonly selected: Student[] = []
 
-    var selected: Student[] = []
-  }
   // TODO: Add fields to store current students in group, selected student, ...
   // Maybe also functions like isInGroup(student).
 }
