@@ -1,0 +1,31 @@
+{
+  "name": "groupformviz",
+  "version": "0.0.1",
+  "description": "A tool for visualizing self-reported student data in order to assist with forming group for project work.",
+  "private": true,
+  "scripts": {
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bone008/groupformviz.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bone008/groupformviz/issues"
+  },
+  "homepage": "https://github.com/Bone008/groupformviz#readme",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.67.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
+  },
+  "dependencies": {
+    "d3": "^7.3.0"
+  }
+}
