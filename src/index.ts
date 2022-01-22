@@ -3,6 +3,8 @@ import { DetailsController } from "./details";
 import { PeopleController } from "./people";
 import { VisualizationController } from "./visualization";
 
+import './style.css';
+
 const DEBUG = true; // Can be pulled in from webpack env later.
 
 function init() {
