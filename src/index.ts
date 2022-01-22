@@ -22,6 +22,12 @@ function init() {
     win.peopleController = peopleController;
     win.detailsController = detailsController;
     win.visualizationController = visualizationController;
+
+    // Populate students with some dummy data
+    let sahil = peopleController.addStudent("Sahil");
+    let lukas = peopleController.addStudent("Lukas");
+    let erik = peopleController.addStudent("Erik");
+    peopleController.addToGroup(sahil);
   }
 }
 
