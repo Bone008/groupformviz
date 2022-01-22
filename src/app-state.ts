@@ -33,7 +33,13 @@ export interface Student {
 /** Shared global state between all controllers. */
 export class AppState {
   readonly students: Student[] = Data
-  readonly selected: Student[] = []
+  public selected: Student[] = []
+
+  constructor () {
+    this.students.forEach(student => {
+      student.Alias = student.Alias.trim();
+    });
+  }
 
   // TODO: Add fields to store current students in group, selected student, ...
   // Maybe also functions like isInGroup(student).
