@@ -14,10 +14,10 @@ export interface Student {
   RelevantCourses: string;
   Canvas: string;
   VizSkills: number;
-  Statistics: number;
-  Math: number;
-  Computer: number;
-  Programming: number;
+  StatisticsSkills: number;
+  MathsSkills: number;
+  ComputerUsageSkills: number;
+  ProgrammingSkills: number;
   ComputerGraphics: number;
   Hci: number;
   Ux: number;
@@ -29,9 +29,9 @@ export interface Student {
 
 /** Shared global state between all controllers. */
 export class AppState {
+  students: Student[] = Data;
   constructor() {
-    var students: Student[] = Data;
-    console.log(students)
+    console.log(this.students)
 
     var selected: Student[] = []
   }
