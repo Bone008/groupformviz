@@ -1,3 +1,4 @@
+import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import { AppState, Student } from "./app-state";
 
 /** Logic for the people list on the left side of the UI. */
@@ -21,7 +22,7 @@ export class PeopleController {
     let frag: DocumentFragment = <DocumentFragment>tmp.content.cloneNode(true)
     let stdElt: HTMLElement = <HTMLElement> frag.firstElementChild;
     stdElt.innerHTML = stdElt.innerHTML.replace("${alias}", student.Alias);
-    stdElt.id = student.Alias;
+    stdElt.dataset["alias"] = student.Alias;
 
     // Create button functions
     let button = stdElt.querySelector("i");
@@ -37,7 +38,14 @@ export class PeopleController {
   }
 
   private getStudentElt(student: Student) : HTMLElement {
-    return this.list.querySelector(`#${student.Alias}`);
+    for (const c of Array.from(this.list.children)) {
+      const child = <HTMLElement> c;
+      if (child.dataset["alias"] == student.Alias) {
+        return child;
+      } 
+    };
+
+    return null;
   }
 
   addToGroup (student: Student) : void {  
@@ -52,7 +60,8 @@ export class PeopleController {
     button.classList.remove("bi-person-plus");
     button.classList.add("bi-person-dash");
 
-    // TODO: modify appState
+    // Add student to AppState
+    this.appState.selected.push(student);
   }
 
   removeFromGroup (student: Student) : void {
@@ -67,6 +76,9 @@ export class PeopleController {
     button.classList.remove("bi-person-dash");
     button.classList.add("bi-person-plus");
 
-    // TODO: modify appState
+    // Remove student from AppState
+    this.appState.selected = this.appState.selected.filter((v, i) => {
+      return v.Alias != student.Alias;
+    });
   }
 }

@@ -1,7 +1,16 @@
+html, body { 
+  height: 100%;
+}
+
 #people {
   min-width: 200px;
-} 
+}
 
 #people .in-group {
   background-color: #72b998;
+}
+
+#people-list {
+  overflow-y: scroll;
+  max-height: 200px; /* TODO: Fix this hack */
 }

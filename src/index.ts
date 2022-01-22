@@ -25,7 +25,9 @@ function init() {
   }
 
   // Populate people section from data
-  // TODO
+  appState.students.forEach(student => {
+    peopleController.addStudent(student);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);
