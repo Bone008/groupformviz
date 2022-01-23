@@ -29,12 +29,65 @@ export interface Student {
   FiveYears: string
 }
 
+export type ObserverCallback<T> = (value: T) => void;
+
 
 /** Shared global state between all controllers. */
 export class AppState {
   readonly students: Student[] = Data
-  readonly selected: Student[] = []
+  public selected: Student[] = []
+  public hovered: Student
 
-  // TODO: Add fields to store current students in group, selected student, ...
-  // Maybe also functions like isInGroup(student).
+  private selectedObservers: ObserverCallback<Student[]>[] = [];
+  private hoveredObservers: ObserverCallback<Student>[] = []
+
+  constructor () {
+    this.students.forEach(student => {
+      student.Alias = student.Alias.trim();
+    });
+  }
+
+  addSelectedStudent(student: Student) {
+    if (this.selected.includes(student)) { return }
+    
+    this.selected.push(student);
+
+    if (this.hovered == student) {
+      this.hovered = null;
+    }
+
+    this.notifySelected();
+  }
+
+  removeSelectedStudent(student: Student): boolean {
+    const index = this.selected.indexOf(student);
+    if (index !== -1) {
+      this.selected.splice(index, 1);
+      this.notifySelected();
+      return true;
+    }
+    return false;
+  }
+  
+  /** Adds a callback that is called whenever the array of selected students is changed. */
+  observeSelected(observer: ObserverCallback<Student[]>) {
+    this.selectedObservers.push(observer);
+  }
+
+  observeHovered(observer: ObserverCallback<Student>) {
+    this.hoveredObservers.push(observer);
+  }
+
+  private notifySelected() {
+    for (const observer of this.selectedObservers) {
+      observer(this.selected);
+    }
+  }
+
+  hoverStudent(student: Student){
+    if (this.selected.indexOf(student) != -1) { return }
+
+    this.hovered = student;
+    this.hoveredObservers.forEach(observer => observer(this.hovered));
+  }
 }
