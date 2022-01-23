@@ -29,7 +29,7 @@ export class Radar {
 		this.minDim = Math.min(element.clientWidth, element.clientHeight);
 
 		this.renderAxes();
-		document.addEventListener("groupUpdated", () => this.renderData());
+		this.appState.observeSelected(() => this.renderData());
 	}
 
 	renderAxes (): void {
