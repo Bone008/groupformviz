@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 //@ts-ignore
 import * as d3Cloud from 'd3-cloud'
 import { AppState, Student } from './app-state';
+//@ts-ignore
+import * as rawInterests from './interests.csv'
 
 /** Logic for the main visualization view */
 export class VisualizationController {
@@ -109,6 +111,19 @@ export class VisualizationController {
       "Sailing", "Kayaking", "Windsurfing", "Hiking", "Youtube", "Twitter", "Gardening", "CS:GO",
       "Swimming", "Badminton", "Traveling", "Baking", "Crafting", "Climbing", "Technology"
     ].map(word => {return {text: word, value: 1000}});
+    // massage the interest data into something easier to use
+    let interests: any = {}
+    rawInterests.forEach((object: any) => {
+      Object.entries(object).forEach(([key, value]) => {
+        if(value) {
+          if(key in interests) {
+            interests[key].push(value)
+          } else {
+            interests[key] = [value]
+          }
+        }
+      });
+    });
     const height = 700;
     const length = 700;
 
@@ -116,31 +131,36 @@ export class VisualizationController {
       .size([height, length])
       .words(words)
       .rotate(function() { return 0 })
-      .on("end", (data: any, bounds: any) => this.draw(data, this.element));
-    
+      .on("end", (data: any, bounds: any) => this.draw(data, this.element, interests));
+
     layout.start()
   }
 
-      //@ts-ignore
-  private draw(words, element) {
-    //@ts-ignore
+
+  private draw(words: any, element: HTMLElement, interests: any) {
     var fill = d3.scaleOrdinal(d3.schemeCategory10);
 
     d3.select(element)
         .select('.vis-word-cloud')
         .append("g")
         .attr("transform", "translate(" + 700 / 2 + "," + 700 / 2 + ")")
-        .selectAll("text") //@ts-ignore
+        .selectAll("text")
         .data(words)
         .enter()
-        .append("text")     //@ts-ignore
-        .text((d) => d.text)    //@ts-ignore
-        .style("font-size", (d) => d.size + "px")    //@ts-ignore
-        .style("font-family", (d) => d.font)    //@ts-ignore
-        .style("fill", (d, i) => fill(i))
-        .attr("text-anchor", "middle")    //@ts-ignore
-        .attr("transform", (d) => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+        .append("text")
+        .text((d: any) => d.text)
+        .style("font-size", (d: any) => d.size + "px")
+        .style("font-family", (d: any) => d.font)
+        .style("fill", (d, i: any) => fill(i))
+        .attr("text-anchor", "middle")
+        .attr("transform", (d: any) => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .attr("id", (d, i) => words[i].text)
-        .on("click", (event, d) => {d3.select(event.target.id).style("fill", (d, i) => "black")})
+        .on("click", (event, d) => {
+          let aliases = interests[event.target.id]
+          aliases.forEach((alias: string) => {
+            let student = this.appState.students.find((student: Student) => student.Alias==alias)
+            // this.appState.addSelectedStudent(student)
+          });
+        });
   }
 }
