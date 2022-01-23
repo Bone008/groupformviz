@@ -5,3 +5,7 @@
 #people .in-group {
   background-color: #72b998;
 }
+
+.vis-word-cloud text {
+  cursor: pointer;
+}
