@@ -32,7 +32,7 @@ function init() {
   });
 
   // DEBUG
-  let radar = new Radar(document.querySelector(".radar"), appState, ["ComputerGraphics", "Statistics", "Programming", "Math", "Ux", "Art", "Computer", "VizSkills", "Hci"]);
+  let radar = new Radar(document.querySelector(".radar"), appState, ["ComputerGraphics", "Statistics", "Hci", "Math", "Ux", "Art", "Computer", "VizSkills", "Programming"]);
 }
 
 document.addEventListener('DOMContentLoaded', init);

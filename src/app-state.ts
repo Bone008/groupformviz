@@ -36,8 +36,10 @@ export type ObserverCallback<T> = (value: T) => void;
 export class AppState {
   readonly students: Student[] = Data
   public selected: Student[] = []
+  public hovered: Student
 
   private selectedObservers: ObserverCallback<Student[]>[] = [];
+  private hoveredObservers: ObserverCallback<Student>[] = []
 
   constructor () {
     this.students.forEach(student => {
@@ -46,9 +48,14 @@ export class AppState {
   }
 
   addSelectedStudent(student: Student) {
-    if (!this.selected.includes(student)) {
-      this.selected.push(student);
+    if (this.selected.includes(student)) { return }
+    
+    this.selected.push(student);
+
+    if (this.hovered == student) {
+      this.hovered = null;
     }
+
     this.notifySelected();
   }
 
@@ -67,9 +74,20 @@ export class AppState {
     this.selectedObservers.push(observer);
   }
 
+  observeHovered(observer: ObserverCallback<Student>) {
+    this.hoveredObservers.push(observer);
+  }
+
   private notifySelected() {
     for (const observer of this.selectedObservers) {
       observer(this.selected);
     }
+  }
+
+  hoverStudent(student: Student){
+    if (this.selected.indexOf(student) != -1) { return }
+
+    this.hovered = student;
+    this.hoveredObservers.forEach(observer => observer(this.hovered));
   }
 }

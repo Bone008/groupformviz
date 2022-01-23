@@ -33,6 +33,9 @@ export class PeopleController {
       }
     });
     
+    stdElt.addEventListener('mouseenter', () => this.appState.hoverStudent(student));
+    stdElt.addEventListener('mouseleave', () => this.appState.hoverStudent(null));
+    
     this.list.appendChild(stdElt);
   }
 
