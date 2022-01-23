@@ -8,11 +8,14 @@ export class Radar {
 
 	private opt = {
 		padding: 25,
-		opacity: 0.85,
-		background: "#72b998",
-		drawPoints: false,
+		background: "gray",
 		labelDist: 3,
 		labelSize: 8,
+
+		opacity: 0.85,
+		drawPoints: false,
+		curve: d3.curveLinear, // or try d3.curveNatural with drawPoints on
+		colorScheme: d3.schemeTableau10,
 	}
 
     constructor (
@@ -75,6 +78,10 @@ export class Radar {
 		
 		plots.selectAll("*").remove(); // Clear screen (TODO: Animate changes)
 		if(this.appState.selected.length == 0){ return }
+
+		// Generate colors for each student
+		const color = d3.scaleOrdinal().domain(this.appState.students.map(st => st.Alias))
+			.range(this.opt.colorScheme);
 		
 		// Create a plot for each student
 		for (const student of this.appState.selected) {
@@ -88,10 +95,11 @@ export class Radar {
 			/* Draw polygon described by data points */
 			let lineGenerator = d3.line()
 				.x(d => d[0])
-				.y(d => d[1]);
+				.y(d => d[1])
+				.curve(this.opt.curve)
 			plot.append("path")
 				.style("stroke", "black")
-				.style("fill", "crimson")
+				.style("fill", () => <string>color(student.Alias))
 				.style("fill-opacity", this.opt.opacity)
 				.attr("d", lineGenerator(points));
 
@@ -101,7 +109,7 @@ export class Radar {
 					.data(points)
 					.enter().append("circle")
 					.style("stroke", "black")
-					.style("fill", "crimson")
+					.style("fill", () => <string>color(student.Alias))
 					.attr("r", 3)
 					.attr("cx", d => d[0])
 					.attr("cy", d => d[1])
