@@ -1,6 +1,11 @@
 import * as d3 from 'd3';
 import { AppState, Student } from './app-state';
 
+export enum RadarShape {
+    POLYGON,
+    SECTOR,
+}
+
 export class Radar {
     private cx: number;
     private cy: number;
@@ -18,7 +23,9 @@ export class Radar {
 
         colorScheme: d3.schemeTableau10,
 
-        opacity: 0.85,
+        shape: RadarShape.SECTOR,
+        opacity: 0.5,
+        hoveredOpacity: 0.5,
         drawPoints: false,
         curve: d3.curveLinear, // or try d3.curveNatural with drawPoints on
     }
@@ -72,13 +79,14 @@ export class Radar {
             .attr("y2", (d, i) => this.getPosOnCircle(i, this.radiusLimit)[1])
         
         /* Draw labels for radial axes */
+        // Adjust for different shape types
         labels.selectAll("text")
             .data(this.skills)
             .enter().append("text")
             .text(d => d)
             .attr("text-anchor", (d, i) => this.getAnchor(i))
-            .attr("x", (d, i) => this.getPosOnCircle(i, this.radiusLimit + this.opts.labelDist)[0])
-            .attr("y", (d, i) => this.getPosOnCircle(i, this.radiusLimit + this.opts.labelDist)[1] + this.getYAnchor(i))
+            .attr("x", (d, i) => this.getPosOnCircle(i, this.radiusLimit + this.opts.labelDist, true)[0])
+            .attr("y", (d, i) => this.getPosOnCircle(i, this.radiusLimit + this.opts.labelDist, true)[1] + this.getYAnchor(i))
             .attr("font-size", this.opts.labelSize + "px")
     }
 
@@ -94,14 +102,14 @@ export class Radar {
         
         // Create a plot for each student (TODO: use D3 more properly here)
         for (const student of this.appState.selected) {
-            this.renderStudent(student, 1)
+            this.renderStudent(student, this.opts.opacity)
         }
 
         let legendData = this.appState.selected.map(st => st.Alias)
 
         // Create solid plot for hovered student
         if(this.appState.hovered != null) { 
-            this.renderStudent(this.appState.hovered, 0.85)
+            this.renderStudent(this.appState.hovered, this.opts.hoveredOpacity)
             legendData.push(this.appState.hovered.Alias)
         }
 
@@ -132,17 +140,25 @@ export class Radar {
         return data;
     }
 
+    private getAngle (i: number, offset: boolean = false): number {
+        if (offset && this.opts.shape == RadarShape.SECTOR){
+            i += 0.5;
+        }
+        return (i / this.skills.length - 0.25) * 2 * Math.PI;
+    }
+
     /* Converts a (field, radius) pair into polar coordinates (in pixels) */
-    private getPosOnCircle (i: number, r: number): [number, number] {
+    private getPosOnCircle (i: number, r: number, offset: boolean = false): [number, number] {
+        const angle = this.getAngle(i, offset);
         return [
-            this.cx + r * Math.cos((i / this.skills.length - 0.25) * 2 * Math.PI),
-            this.cy + r * Math.sin((i / this.skills.length - 0.25) * 2 * Math.PI),
+            this.cx + r * Math.cos(angle),
+            this.cy + r * Math.sin(angle),
         ]
     }
 
     /* Calculates best anchor for the label of a given radial axis */
     private getAnchor (i: number, eps: number = 0.01): string {
-        let cos = Math.cos((i / this.skills.length - 0.25) * 2 * Math.PI);
+        let cos = Math.cos(this.getAngle(i, true));
         if (Math.abs(cos) < eps) { cos = 0 }
         const side = Math.sign(cos);
 
@@ -154,7 +170,7 @@ export class Radar {
     }
 
     private getYAnchor (i: number, eps: number = 0.01): number {
-        let sin = Math.sin((i / this.skills.length - 0.25) * 2 * Math.PI);
+        let sin = Math.sin(this.getAngle(i, true));
         if (Math.abs(sin) < eps) { sin = 0 }
         const side = Math.sign(sin);
 
@@ -180,19 +196,44 @@ export class Radar {
         const data = this.studentToData(student);
 
         // Generate list of polar points from data
-        let points: [number, number][] = data.map( (d, i) => this.getPosOnCircle(i, this.getRadius(d))); 
+        let points: [number, number][] = data.map( (d, i) => this.getPosOnCircle(i, this.getRadius(d), true)); 
         points = [...points, points[0]]; // Close loop
 
         /* Draw polygon described by data points */
-        let lineGenerator = d3.line()
-            .x(d => d[0])
-            .y(d => d[1])
-            .curve(this.opts.curve)
+        let shape: string;
+        switch(this.opts.shape){
+            case RadarShape.POLYGON:
+                shape = d3.line()
+                    .x(d => d[0])
+                    .y(d => d[1])
+                    .curve(this.opts.curve)
+                    (points);
+                break;
+
+            case RadarShape.SECTOR:
+                // There should probably be a cleaner way to draw a few arcs but I can't figure it out              
+                let path = d3.path();
+                data.forEach((d, i) => {
+                    path.moveTo(this.cx, this.cy);
+                    let arcStart = this.getPosOnCircle(i, this.getRadius(d));
+                    let tangentRad = this.getRadius(d) / Math.sin(Math.PI/2 - Math.PI / this.skills.length)
+                    let arcMiddle = this.getPosOnCircle(i+0.5, tangentRad);
+                    let arcEnd = this.getPosOnCircle(i+1, this.getRadius(d));
+                    path.lineTo(...arcStart);
+                    path.arcTo(...arcMiddle, ...arcEnd, this.getRadius(d));
+                    path.lineTo(this.cx, this.cy);
+                });
+
+                shape = path.toString();
+                break;
+
+        }
+
         plot.append("path")
             .style("stroke", "black")
             .style("fill", () => <string> this.color(student.Alias))
             .style("fill-opacity", opacity)
-            .attr("d", lineGenerator(points))
+            .attr("d", shape)
             .on("click", () => console.log("clicked on student:", student.Alias)) // TODO: click/mouseover effect?
         
         /* Draw circles at each actual point */
