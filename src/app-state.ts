@@ -44,3 +44,5 @@ export class AppState {
   // TODO: Add fields to store current students in group, selected student, ...
   // Maybe also functions like isInGroup(student).
 }
+
+export const groupUpdatedEvent = new CustomEvent('groupUpdated');

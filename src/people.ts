@@ -1,5 +1,5 @@
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
-import { AppState, Student } from "./app-state";
+import { AppState, groupUpdatedEvent, Student } from "./app-state";
 
 /** Logic for the people list on the left side of the UI. */
 export class PeopleController {
@@ -62,6 +62,7 @@ export class PeopleController {
 
     // Add student to AppState
     this.appState.selected.push(student);
+    document.dispatchEvent(groupUpdatedEvent);
   }
 
   removeFromGroup (student: Student) : void {
@@ -80,5 +81,6 @@ export class PeopleController {
     this.appState.selected = this.appState.selected.filter((v, i) => {
       return v.Alias != student.Alias;
     });
+    document.dispatchEvent(groupUpdatedEvent);
   }
 }

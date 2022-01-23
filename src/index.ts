@@ -32,8 +32,7 @@ function init() {
   });
 
   // DEBUG
-  let radar = new Radar(appState.students, document.querySelector(".radar"));
-  radar.render();
+  let radar = new Radar(document.querySelector(".radar"), appState, ["ComputerGraphics", "Statistics", "Programming", "Math", "Ux", "Art", "Computer", "VizSkills", "Hci"]);
 }
 
 document.addEventListener('DOMContentLoaded', init);
