@@ -56,7 +56,6 @@ export class PeopleController {
     this.list.insertBefore(elt, this.groupBreak);
 
     elt.classList.add("in-group");
-    elt.classList.remove('bg-white');
 
     let button = elt.querySelector("i");
     button.classList.remove("bi-person-plus");
@@ -71,7 +70,6 @@ export class PeopleController {
     this.list.insertBefore(elt, this.groupBreak);
     this.list.insertBefore(this.groupBreak, elt);
 
-    elt.classList.add('bg-white');
     elt.classList.remove("in-group");
     
     let button = elt.querySelector("i");
