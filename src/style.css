@@ -48,8 +48,13 @@ main {
   background-color: white;
 }
 
-.student:not(.in-group):hover {
+.student:not(.in-group).activeStudent {
   background-color: beige; /* TODO: pick a better color */
+}
+
+.student.in-group.activeStudent {
+  background-color: beige !important;
+  border-color: #72b998 !important;
 }
 
 .hidden {

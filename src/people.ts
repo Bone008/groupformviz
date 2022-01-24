@@ -13,6 +13,17 @@ export class PeopleController {
 
     this.list = element.querySelector("#people-list"); 
     this.groupBreak = element.querySelector("#group-break");
+
+    this.appState.observeActive(student => {
+      // Find div and style it
+      Array.from(this.list.children).forEach((elt: HTMLElement) => {
+        if (student == null || elt.dataset["alias"] != student.Alias) {
+          elt.classList.remove("activeStudent")
+        } else {
+          elt.classList.add("activeStudent")
+        }
+      });
+    });
   }
 
 
@@ -33,8 +44,13 @@ export class PeopleController {
       }
     });
     
-    stdElt.addEventListener('mouseenter', () => this.appState.hoverStudent(student));
-    stdElt.addEventListener('mouseleave', () => this.appState.hoverStudent(null));
+    stdElt.addEventListener('click', () => {
+      if(this.appState.active == student){
+        this.appState.inspectStudent(null);
+      } else {
+        this.appState.inspectStudent(student);
+      }
+    });
     
     this.list.appendChild(stdElt);
   }

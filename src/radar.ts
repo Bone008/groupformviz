@@ -50,7 +50,7 @@ export class Radar {
 
         this.renderAxes();
         this.appState.observeSelected(() => this.renderData());
-        this.appState.observeHovered(() => this.renderData());
+        this.appState.observeActive(() => this.renderData());
     }
 
     renderAxes (): void {
@@ -109,23 +109,28 @@ export class Radar {
         let legendColor: (d: string) => string;
 
         // Create solid plot for hovered student
-        if(this.appState.hovered != null) {
+        if(this.appState.active != null) {
             if (this.opts.showIndividual){
-                this.renderStudent(this.appState.hovered, this.opts.hoveredOpacity)
+                this.renderStudent(this.appState.active, this.opts.hoveredOpacity)
             }
             else {
-                this.renderStudent(this.appState.hovered, this.opts.hoveredOpacity, this.opts.nonAggregateColor)
+                this.renderStudent(this.appState.active, this.opts.hoveredOpacity, this.opts.nonAggregateColor)
             }
 
-            if (!this.appState.selected.includes(this.appState.hovered)){
-                legendData.push("", this.appState.hovered.Alias);
+            if (!this.appState.selected.includes(this.appState.active)){
+                legendData.push("", this.appState.active.Alias);
             }
         }
 
         if(this.opts.showIndividual){
             legendColor = (d) => <string>this.color(d);
         } else {
-            legendData = [this.opts.aggregateName, ...legendData]
+            if(this.appState.selected.length > 0){
+                legendData = [this.opts.aggregateName, ...legendData]
+            } else {
+                // Remove the empty space we added earlier
+                legendData = legendData.slice(1);
+            }
             legendColor = (d) => {
                 // For the aggregate we have a specified color
                 if (d === this.opts.aggregateName){
@@ -133,7 +138,7 @@ export class Radar {
                 }
 
                 // For the hovered person we use a special color
-                if (this.appState.hovered != null && this.appState.hovered.Alias === d){
+                if (this.appState.active != null && this.appState.active.Alias === d){
                     return this.opts.nonAggregateColor;
                 }
                 
@@ -142,6 +147,14 @@ export class Radar {
             };
         }
 
+        const selectByAlias = (evt: Event, d: any) => {
+            if (d === this.opts.aggregateName){
+                this.appState.inspectStudent(null);
+                return;
+            }
+            const student = this.appState.students.filter(st => st.Alias == d)[0];
+            this.appState.inspectStudent(student);
+        };
 
         /* Draw Legend */
         legend.selectAll("text")
@@ -154,7 +167,8 @@ export class Radar {
             .attr("font-weight", d => {
                 if (d === this.opts.aggregateName) return "bold";
                 // else return "none";
-            });
+            })
+            .on("click", selectByAlias);
         
         legend.selectAll("circle")
             .data(legendData)

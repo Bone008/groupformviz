@@ -10,7 +10,8 @@ export class DetailsController {
   ) {
     console.log('DetailsController initialized with:', element);
 
-    this.appState.observeHovered(st => this.fillDataParagraph(st));
+    this.fillDataParagraph(null);
+    this.appState.observeActive(st => this.fillDataParagraph(st));
   }
 
   // Old version
@@ -32,12 +33,19 @@ export class DetailsController {
   }
 
   private fillDataParagraph(student: Student) {
-    if (student === null) return;
-
-    const data = Object.entries(student);
     const container = d3.select("#details").select("div.details");
     container.selectAll("*").remove();
+    
+    if (student === null) {
+      const rows = container.append("p")
+        .classed("m-auto fs-6 text-secondary", true)
+        .text("No student inspected")
+      
+      return;
+    }
 
+    const data = Object.entries(student);
+    
     const rows = container.selectAll("div")
       .data(data)
       .enter().append("div")
