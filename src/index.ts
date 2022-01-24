@@ -15,7 +15,7 @@ function init() {
   const appState = new AppState();
   const peopleController = new PeopleController(document.querySelector('#people'), appState);
   const detailsController = new DetailsController(document.querySelector('#raw-data'), appState);
-  // const visualizationController = new VisualizationController(document.querySelector('#visuals'), appState);
+  const visualizationController = new VisualizationController(document.querySelector('#visuals'), appState);
 
   if(DEBUG) {
     // Declare globally to allow convenient access from dev tools.
@@ -23,7 +23,7 @@ function init() {
     win.appState = appState;
     win.peopleController = peopleController;
     win.detailsController = detailsController;
-    // win.visualizationController = visualizationController;
+    win.visualizationController = visualizationController;
   }
 
   // Populate people section from data
