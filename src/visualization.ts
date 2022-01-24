@@ -100,17 +100,17 @@ export class VisualizationController {
   }
 
   private renderWordCloud() {
-    let words = [
-      "Video games", "Nature", "Basketball", "Design", "UX", "Movies", "TV-series", "Learning",
-      "Workout", "Handball", "Gym", "Hanging out", "Guitar", "Photography", "Game development",
-      "Sports", "Music", "Football", "Stock market", "3D printing", "Tennis", "Golf", "Painting",
-      "Cats", "Plants", "Piano", "Going to bars", "VR", "Reading", "Wargaming", "Art",
-      "Web development", "Languages", "Yoga", "Coffee", "Running", "Knitting", "Drawing",
-      "Outdoors", "Cooking", "Friends", "Programming", "Politics", "Board games", "Dancing",
-      "Ultimate frisbee", "Artificial intelligence", "Pen-and-paper role playing games", "Skiing",
-      "Sailing", "Kayaking", "Windsurfing", "Hiking", "Youtube", "Twitter", "Gardening", "CS:GO",
-      "Swimming", "Badminton", "Traveling", "Baking", "Crafting", "Climbing", "Technology"
-    ].map(word => {return {text: word, value: 1000}});
+    // let words = [
+    //   "Video games", "Nature", "Basketball", "Design", "UX", "Movies", "TV-series", "Learning",
+    //   "Workout", "Handball", "Gym", "Hanging out", "Guitar", "Photography", "Game development",
+    //   "Sports", "Music", "Football", "Stock market", "3D printing", "Tennis", "Golf", "Painting",
+    //   "Cats", "Plants", "Piano", "Going to bars", "VR", "Reading", "Wargaming", "Art",
+    //   "Web development", "Languages", "Yoga", "Coffee", "Running", "Knitting", "Drawing",
+    //   "Outdoors", "Cooking", "Friends", "Programming", "Politics", "Board games", "Dancing",
+    //   "Ultimate frisbee", "Artificial intelligence", "Pen-and-paper role playing games", "Skiing",
+    //   "Sailing", "Kayaking", "Windsurfing", "Hiking", "Youtube", "Twitter", "Gardening", "CS:GO",
+    //   "Swimming", "Badminton", "Traveling", "Baking", "Crafting", "Climbing", "Technology"
+    // ].map(word => {return {text: word, value: 1000}});
     // massage the interest data into something easier to use
     let interests: any = {}
     rawInterests.forEach((object: any) => {
@@ -124,12 +124,15 @@ export class VisualizationController {
         }
       });
     });
+    let words = Object.keys(interests).map(word => {return {text: word, value: interests[word].length*500}});
+    console.log(words)
     const height = 700;
     const length = 700;
 
     var layout = d3Cloud()
       .size([height, length])
       .words(words)
+      .font("sans-serif")
       .rotate(function() { return 0 })
       .on("end", (data: any, bounds: any) => this.draw(data, this.element, interests));
 
@@ -156,6 +159,10 @@ export class VisualizationController {
         .attr("transform", (d: any) => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
         .attr("id", (d, i) => words[i].text)
         .on("click", (event, d) => {
+          d3.select(element)
+            .select('.vis-word-cloud')
+            .select('#' + event.target.id)
+            .attr('fill', 'black')
           let aliases = interests[event.target.id]
           aliases.forEach((alias: string) => {
             let student = this.appState.students.find((student: Student) => student.Alias==alias)
