@@ -85,8 +85,6 @@ export class AppState {
   }
 
   hoverStudent(student: Student){
-    if (this.selected.indexOf(student) != -1) { return }
-
     this.hovered = student;
     this.hoveredObservers.forEach(observer => observer(this.hovered));
   }

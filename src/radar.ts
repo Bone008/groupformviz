@@ -14,13 +14,17 @@ export class Radar {
 
     private opts = {
         padding: 25,
-        background: "gray",
+        background: "white",
         labelDist: 3,
         labelSize: 8,
 
         legendSize: 12,
         legendWidth: 150,
 
+        showIndividual: false,
+        aggregateName: "Your Group Members",
+        aggregateColor: "#72b998",
+        nonAggregateColor: "#ff9999",
         colorScheme: d3.schemeTableau10,
 
         shape: RadarShape.SECTOR,
@@ -98,20 +102,47 @@ export class Radar {
         plots.selectAll("*").remove(); // Clear screen (TODO: Animate changes)
         legend.selectAll("*").remove();
         
-        
-        
         // Create a plot for each student (TODO: use D3 more properly here)
-        for (const student of this.appState.selected) {
-            this.renderStudent(student, this.opts.opacity)
-        }
-
-        let legendData = this.appState.selected.map(st => st.Alias)
+        this.renderStudents(this.appState.selected);
+        
+        
+        let legendData: string[] = this.appState.selected.map(st => st.Alias);
+        let legendColor: (d: string) => string;
 
         // Create solid plot for hovered student
-        if(this.appState.hovered != null) { 
-            this.renderStudent(this.appState.hovered, this.opts.hoveredOpacity)
-            legendData.push(this.appState.hovered.Alias)
+        if(this.appState.hovered != null) {
+            if (this.opts.showIndividual){
+                this.renderStudent(this.appState.hovered, this.opts.hoveredOpacity)
+            }
+            else {
+                this.renderStudent(this.appState.hovered, this.opts.hoveredOpacity, this.opts.nonAggregateColor)
+            }
+
+            if (!this.appState.selected.includes(this.appState.hovered)){
+                legendData.push("", this.appState.hovered.Alias);
+            }
         }
+
+        if(this.opts.showIndividual){
+            legendColor = (d) => <string>this.color(d);
+        } else {
+            legendData = [this.opts.aggregateName, ...legendData]
+            legendColor = (d) => {
+                // For the aggregate we have a specified color
+                if (d === this.opts.aggregateName){
+                    return this.opts.aggregateColor;
+                }
+
+                // For the hovered person we use a special color
+                if (this.appState.hovered != null && this.appState.hovered.Alias === d){
+                    return this.opts.nonAggregateColor;
+                }
+                
+                // For in-group people we leave it blank
+                return "none";
+            };
+        }
+
 
         /* Draw Legend */
         legend.selectAll("text")
@@ -121,6 +152,10 @@ export class Radar {
             .attr("font-size", this.opts.legendSize)
             .attr("x", this.element.clientWidth - this.opts.legendWidth + 2*this.opts.legendSize)
             .attr("y", (d, i) => (i+1) * (this.opts.legendSize + 2))
+            .attr("font-weight", d => {
+                if (d === this.opts.aggregateName) return "bold";
+                // else return "none";
+            });
         
         legend.selectAll("circle")
             .data(legendData)
@@ -129,8 +164,89 @@ export class Radar {
             .attr("cx", this.element.clientWidth - this.opts.legendWidth + this.opts.legendSize)
             .attr("cy", (d, i) => (i+1) * (this.opts.legendSize + 2) - this.opts.legendSize / 3)
             .attr("stroke-fill", "none")
-            .attr("fill", d => <string>this.color(d))
+            .attr("fill", d => legendColor(d))
     }
+
+    private renderStudent (student: Student, opacity: number = this.opts.opacity, color: string = undefined): void {
+        const plot = d3.select("svg.radar").select("g.plots").append("g");
+        const data = this.studentToData(student);
+
+        // Generate list of polar points from data
+        let points: [number, number][] = data.map( (d, i) => this.getPosOnCircle(i, this.getRadius(d), true)); 
+        points = [...points, points[0]]; // Close loop
+
+        /* Draw polygon described by data points */
+        let shape: string;
+        switch(this.opts.shape){
+            case RadarShape.POLYGON:
+                shape = d3.line()
+                    .x(d => d[0])
+                    .y(d => d[1])
+                    .curve(this.opts.curve)
+                    (points);
+                break;
+
+            case RadarShape.SECTOR:
+                // There should probably be a cleaner way to draw a few arcs but I can't figure it out              
+                let path = d3.path();
+                data.forEach((d, i) => {
+                    path.moveTo(this.cx, this.cy);
+                    let arcStart = this.getPosOnCircle(i, this.getRadius(d));
+                    let tangentRad = this.getRadius(d) / Math.sin(Math.PI/2 - Math.PI / this.skills.length)
+                    let arcMiddle = this.getPosOnCircle(i+0.5, tangentRad);
+                    let arcEnd = this.getPosOnCircle(i+1, this.getRadius(d));
+                    path.lineTo(...arcStart);
+                    path.arcTo(...arcMiddle, ...arcEnd, this.getRadius(d));
+                    path.lineTo(this.cx, this.cy);
+                });
+
+                shape = path.toString();
+                break;
+
+        }
+
+        // Default to class coloring scheme
+        if (color === undefined){
+            color = <string> this.color(student.Alias);
+        }
+
+        plot.append("path")
+            .style("stroke", "black")
+            .style("fill", color)
+            .style("fill-opacity", opacity)
+            .attr("d", shape)
+            .on("click", () => console.log("clicked on student:", student.Alias)) // TODO: click/mouseover effect?
+        
+        /* Draw circles at each actual point */
+        if (this.opts.drawPoints){
+            plot.selectAll("circle")
+                .data(points)
+                .enter().append("circle")
+                .style("stroke", "black")
+                .style("fill", color)
+                .attr("r", 3)
+                .attr("cx", d => d[0])
+                .attr("cy", d => d[1])
+        }	
+    }
+
+    private renderStudents (students: Student[]): void {
+        if (this.opts.showIndividual) {
+            students.forEach(st => this.renderStudent(st));
+            return;
+        }
+
+        // Assuming aggregate rendering
+        let tmp: any = {};
+        this.skills.forEach(key => {
+            tmp[key] = Math.max(...students.map(st => <number>st[key]));
+        })
+        tmp.Alias = this.opts.aggregateName;
+        
+        const maxStudent = <Student>tmp;
+        this.renderStudent(maxStudent, 1, this.opts.aggregateColor);
+    }
+
 
     private studentToData (student: Student) : number[] {
         let data: number[] = []
@@ -189,63 +305,5 @@ export class Radar {
     private get radiusLimit() {
         // Leave out a few pixels for padding
         return (this.minDim - this.opts.padding) / 2
-    }
-
-    private renderStudent (student: Student, opacity: number = this.opts.opacity): void {
-        const plot = d3.select("svg.radar").select("g.plots").append("g");
-        const data = this.studentToData(student);
-
-        // Generate list of polar points from data
-        let points: [number, number][] = data.map( (d, i) => this.getPosOnCircle(i, this.getRadius(d), true)); 
-        points = [...points, points[0]]; // Close loop
-
-        /* Draw polygon described by data points */
-        let shape: string;
-        switch(this.opts.shape){
-            case RadarShape.POLYGON:
-                shape = d3.line()
-                    .x(d => d[0])
-                    .y(d => d[1])
-                    .curve(this.opts.curve)
-                    (points);
-                break;
-
-            case RadarShape.SECTOR:
-                // There should probably be a cleaner way to draw a few arcs but I can't figure it out              
-                let path = d3.path();
-                data.forEach((d, i) => {
-                    path.moveTo(this.cx, this.cy);
-                    let arcStart = this.getPosOnCircle(i, this.getRadius(d));
-                    let tangentRad = this.getRadius(d) / Math.sin(Math.PI/2 - Math.PI / this.skills.length)
-                    let arcMiddle = this.getPosOnCircle(i+0.5, tangentRad);
-                    let arcEnd = this.getPosOnCircle(i+1, this.getRadius(d));
-                    path.lineTo(...arcStart);
-                    path.arcTo(...arcMiddle, ...arcEnd, this.getRadius(d));
-                    path.lineTo(this.cx, this.cy);
-                });
-
-                shape = path.toString();
-                break;
-
-        }
-
-        plot.append("path")
-            .style("stroke", "black")
-            .style("fill", () => <string> this.color(student.Alias))
-            .style("fill-opacity", opacity)
-            .attr("d", shape)
-            .on("click", () => console.log("clicked on student:", student.Alias)) // TODO: click/mouseover effect?
-        
-        /* Draw circles at each actual point */
-        if (this.opts.drawPoints){
-            plot.selectAll("circle")
-                .data(points)
-                .enter().append("circle")
-                .style("stroke", "black")
-                .style("fill", () => <string> this.color(student.Alias))
-                .attr("r", 3)
-                .attr("cx", d => d[0])
-                .attr("cy", d => d[1])
-        }	
     }
 }
