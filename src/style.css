@@ -30,6 +30,7 @@ html, body {
 
 #details {
   flex: 1 0 200px;
+  overflow: scroll
 }
 
 main {
