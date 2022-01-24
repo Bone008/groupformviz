@@ -37,9 +37,12 @@ export class AppState {
   readonly students: Student[] = Data
   public selected: Student[] = []
   public hovered: Student
+  /** The student that is currently selected to be shown in the details view. */
+  public active: Student;
 
   private selectedObservers: ObserverCallback<Student[]>[] = [];
-  private hoveredObservers: ObserverCallback<Student>[] = []
+  private hoveredObservers: ObserverCallback<Student>[] = [];
+  private activeObservers: ObserverCallback<Student>[] = [];
 
   constructor () {
     this.students.forEach(student => {
@@ -78,6 +81,10 @@ export class AppState {
     this.hoveredObservers.push(observer);
   }
 
+  observeActive(observer: ObserverCallback<Student>) {
+    this.hoveredObservers.push(observer);
+  }
+
   private notifySelected() {
     for (const observer of this.selectedObservers) {
       observer(this.selected);
@@ -85,6 +92,8 @@ export class AppState {
   }
 
   hoverStudent(student: Student){
+    if (this.selected.indexOf(student) != -1) { return }
+
     this.hovered = student;
     this.hoveredObservers.forEach(observer => observer(this.hovered));
   }

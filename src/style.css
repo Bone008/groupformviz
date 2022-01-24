@@ -50,3 +50,7 @@ main {
 .student:not(.in-group):hover {
   background-color: beige; /* TODO: pick a better color */
 }
+
+.hidden {
+  display: none;
+}
