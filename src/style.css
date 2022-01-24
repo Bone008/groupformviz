@@ -47,8 +47,12 @@ main {
   background-color: white;
 }
 
-.student:not(.in-group):hover {
+.student:not(.in-group):not(.active):hover {
   background-color: beige; /* TODO: pick a better color */
+}
+
+.student.active {
+  background-color: orange;
 }
 
 .hidden {

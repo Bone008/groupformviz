@@ -2,7 +2,7 @@ import { AppState, Student } from "./app-state";
 
 /** Logic for the people list on the left side of the UI. */
 export class PeopleController {
-  private readonly list: HTMLElement;
+  private readonly stdEltList: HTMLElement;
   private readonly groupBreak: HTMLElement;
 
   constructor(
@@ -11,8 +11,23 @@ export class PeopleController {
   ) {
     console.log('PeopleController initialized with:', element);
 
-    this.list = element.querySelector("#people-list"); 
+    this.stdEltList = element.querySelector("#people-list"); 
     this.groupBreak = element.querySelector("#group-break");
+
+    this.appState.observeActive(newActive => {
+      for (const stdElt of Array.from(this.stdEltList.children)) {
+        stdElt.classList.remove('active');
+      }
+      if (newActive) {
+        const selectedElement = this.getStudentElt(newActive);
+        selectedElement.classList.add('active');
+      }
+    });
+
+    // Deselect by clicking into empty space.
+    this.element.addEventListener('click', () => {
+      this.appState.setActiveStudent(null);
+    })
   }
 
 
@@ -25,7 +40,8 @@ export class PeopleController {
 
     // Create button functions
     let button = stdElt.querySelector("i");
-    button.addEventListener("click", () => {
+    button.addEventListener("click", e => {
+      e.stopPropagation();
       if (button.classList.contains("bi-person-plus")){
         this.addToGroup(student);
       } else{
@@ -35,12 +51,16 @@ export class PeopleController {
     
     stdElt.addEventListener('mouseenter', () => this.appState.hoverStudent(student));
     stdElt.addEventListener('mouseleave', () => this.appState.hoverStudent(null));
+    stdElt.addEventListener('click', e => {
+      this.appState.setActiveStudent(student);
+      e.stopPropagation();
+    });
     
-    this.list.appendChild(stdElt);
+    this.stdEltList.appendChild(stdElt);
   }
 
   private getStudentElt(student: Student) : HTMLElement {
-    for (const c of Array.from(this.list.children)) {
+    for (const c of Array.from(this.stdEltList.children)) {
       const child = <HTMLElement> c;
       if (child.dataset["alias"] == student.Alias) {
         return child;
@@ -53,7 +73,7 @@ export class PeopleController {
   addToGroup (student: Student) : void {  
     let elt: HTMLElement = this.getStudentElt(student);
       
-    this.list.insertBefore(elt, this.groupBreak);
+    this.stdEltList.insertBefore(elt, this.groupBreak);
 
     elt.classList.add("in-group");
 
@@ -67,8 +87,8 @@ export class PeopleController {
 
   removeFromGroup (student: Student) : void {
     let elt: HTMLElement = this.getStudentElt(student);
-    this.list.insertBefore(elt, this.groupBreak);
-    this.list.insertBefore(this.groupBreak, elt);
+    this.stdEltList.insertBefore(elt, this.groupBreak);
+    this.stdEltList.insertBefore(this.groupBreak, elt);
 
     elt.classList.remove("in-group");
     
