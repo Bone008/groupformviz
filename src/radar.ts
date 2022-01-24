@@ -105,7 +105,6 @@ export class Radar {
         // Create a plot for each student (TODO: use D3 more properly here)
         this.renderStudents(this.appState.selected);
         
-        
         let legendData: string[] = this.appState.selected.map(st => st.Alias);
         let legendColor: (d: string) => string;
 
@@ -231,6 +230,8 @@ export class Radar {
     }
 
     private renderStudents (students: Student[]): void {
+        if (students.length == 0) return;
+
         if (this.opts.showIndividual) {
             students.forEach(st => this.renderStudent(st));
             return;
