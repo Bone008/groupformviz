@@ -10,29 +10,26 @@ export class DetailsController {
   ) {
     console.log('DetailsController initialized with:', element);
 
-    this.fillDataParagraph(null);
-    this.appState.observeActive(st => this.fillDataParagraph(st));
+    this.renderStudent(null);
+    this.appState.observeActive(st => {
+      this.renderStudent(st);
+    });
+
+    document.querySelector('#details-close-btn').addEventListener('click', () => {
+      this.closePanel();
+    });
   }
 
-  // Old version
-  private fillDataTable(student: Student) {
-    if (student === null) return;
+  private closePanel() {
+    // Do not deselect, only hide panel.
+    this.element.classList.add('hidden');
 
-    const data = Object.entries(student);
-
-    const table = d3.select("#details").select("table").select("tbody");
-
-    table.selectAll("*").remove();
-
-    const rows = table.selectAll("tr")
-      .data(data)
-      .enter().append("tr")
-    
-    rows.append("th").text(d => d[0])
-    rows.insert("td").text(d => d[1])
+    // TODO: Close the data view but keep the heading "Details" viewable
+    // and move the open/close button to be inline with this heading
+    // so that the panel can be reopened but takes up much less space
   }
 
-  private fillDataParagraph(student: Student) {
+  private renderStudent(student: Student|null) {
     const container = d3.select("#details").select("div.details");
     container.selectAll("*").remove();
     

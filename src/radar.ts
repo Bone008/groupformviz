@@ -149,11 +149,11 @@ export class Radar {
 
         const selectByAlias = (evt: Event, d: any) => {
             if (d === this.opts.aggregateName){
-                this.appState.inspectStudent(null);
+                this.appState.setActiveStudent(null);
                 return;
             }
             const student = this.appState.students.filter(st => st.Alias == d)[0];
-            this.appState.inspectStudent(student);
+            this.appState.setActiveStudent(student);
         };
 
         /* Draw Legend */

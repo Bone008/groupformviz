@@ -37,7 +37,7 @@ export class AppState {
   readonly students: Student[] = Data
   public selected: Student[] = []
   /** The student that is currently selected to be shown in the details view. */
-  public active: Student;
+  public active: Student|null = null;
 
   private selectedObservers: ObserverCallback<Student[]>[] = [];
   private activeObservers: ObserverCallback<Student>[] = [];
@@ -63,6 +63,12 @@ export class AppState {
     }
     return false;
   }
+
+  private notifySelected() {
+    for (const observer of this.selectedObservers) {
+      observer(this.selected);
+    }
+  }
   
   /** Adds a callback that is called whenever the array of selected students is changed. */
   observeSelected(observer: ObserverCallback<Student[]>) {
@@ -73,14 +79,8 @@ export class AppState {
     this.activeObservers.push(observer);
   }
 
-  private notifySelected() {
-    for (const observer of this.selectedObservers) {
-      observer(this.selected);
-    }
-  }
-
-  inspectStudent(student: Student){
-    this.active = student;
+  setActiveStudent(newActive: Student|null) {
+    this.active = newActive;
     this.activeObservers.forEach(observer => observer(this.active));
   }
 }
