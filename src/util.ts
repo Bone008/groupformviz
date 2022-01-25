@@ -57,13 +57,19 @@ export const RELEVANT_SKILLS = [
   "Programming",
 ] as const;
 
+/** Union type of all skill names. */
+export type SkillName = typeof ALL_SKILLS[number];
+/** Union type of relevant skill names. */
+export type RelevantSkillName = typeof ALL_SKILLS[number];
+
 /** Utility function to initialize a skill dropdown control with the list of skills. */
-export function populateSkillSelectElement(selectElement: HTMLSelectElement) {
+export function populateSkillSelector(selectElement: HTMLSelectElement) {
   d3.select(selectElement)
-      .selectAll('option')
+      .selectAll('option.skill-option')
       .data(ALL_SKILLS)
       .enter()
       .append('option')
+      .classed('skill-option', true)
       .attr('value', d => d)
       .text(d => d);
 }

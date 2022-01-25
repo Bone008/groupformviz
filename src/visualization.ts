@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import * as d3Cloud from 'd3-cloud'
 import { AppState } from './app-state';
 import { Radar } from './radar';
-import { populateSkillSelectElement, Student } from './util';
+import { populateSkillSelector, Student } from './util';
 //@ts-ignore
 import * as rawInterests from './interests.csv'
 
@@ -22,7 +22,7 @@ export class VisualizationController {
     this.radarController = new Radar(this.element.querySelector(".radar"), appState);
 
     const skillSelect = this.element.querySelector<HTMLSelectElement>('.skill-selector');
-    populateSkillSelectElement(skillSelect);
+    populateSkillSelector(skillSelect);
     skillSelect.addEventListener('change', e => {
       this.setSelectedSkill(skillSelect.value);
       this.renderHistogram();

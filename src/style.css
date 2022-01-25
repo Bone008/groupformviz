@@ -20,6 +20,15 @@ html, body {
   flex-direction: column;
 }
 
+#people-options {
+  font-size: 80%;
+}
+
+#people .skill-value {
+  font-weight: 600;
+  color: #1a6441;
+}
+
 #people .in-group {
   background-color: #72b998;
 }

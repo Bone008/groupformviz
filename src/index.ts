@@ -23,11 +23,6 @@ function init() {
     win.detailsController = detailsController;
     win.visualizationController = visualizationController;
   }
-
-  // Populate people section from data
-  appState.students.forEach(student => {
-    peopleController.addStudent(student);
-  });
 }
 
 document.addEventListener('DOMContentLoaded', init);
