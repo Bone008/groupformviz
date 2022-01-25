@@ -166,7 +166,7 @@ export class Radar {
             .attr("class", "legend-clickable")
             .attr("font-size", this.opts.legendSize)
             .attr("x", this.element.clientWidth - this.opts.legendWidth + 2*this.opts.legendSize)
-            .attr("y", (d, i) => (i+1) * (this.opts.legendSize + 2))
+            .attr("y", (d, i) => (i+1) * (this.opts.legendSize + 4))
             .attr("font-weight", d => {
                 if (d === this.opts.aggregateName) return "bold";
                 // else return "none";
@@ -178,7 +178,7 @@ export class Radar {
             .enter().append("circle")
             .attr("r", this.opts.legendSize / 3)
             .attr("cx", this.element.clientWidth - this.opts.legendWidth + this.opts.legendSize)
-            .attr("cy", (d, i) => (i+1) * (this.opts.legendSize + 2) - this.opts.legendSize / 3)
+            .attr("cy", (d, i) => (i+1) * (this.opts.legendSize + 4) - this.opts.legendSize / 3)
             .attr("stroke-fill", "none")
             .attr("fill", d => legendColor(d))
     }
