@@ -103,7 +103,6 @@ export class VisualizationController {
     rawInterests.forEach((object: any) => {
       Object.entries(object).forEach(([key, value]) => {
         if(value) {
-          console.log(value)
           if(key in interests) {
             interests[key].push(value)
           } else {
@@ -151,19 +150,19 @@ export class VisualizationController {
           d3.select(<HTMLElement>event.target)
             .attr('fill', 'black')
           let aliases = interests[event.target.dataset["interest"]]
-          this.labelInterestGroup(event.target.dataset["interest"], aliases, element);
+          this.labelInterestGroup(event.target.dataset["interest"], aliases);
         });
   }
 
-  private labelInterestGroup (interest: string, aliases: string[], element: HTMLElement){
+  private labelInterestGroup (interest: string, aliases: string[]){
     const list = d3.select("#interest-group");
-
     list.selectAll("*").remove();
     
     list.append("text")
       .text(interest)
       .attr("font-weight", "bold")
       .attr("font-size", 12)
+      .style("cursor", "auto")
       .attr("x", 450)
       .attr("y", 20);
 
