@@ -60,3 +60,7 @@ main {
 .hidden {
   display: none;
 }
+
+.legend-clickable {
+  cursor: pointer;
+}

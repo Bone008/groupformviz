@@ -161,6 +161,7 @@ export class Radar {
             .data(legendData)
             .enter().append("text")
             .text(d => d)
+            .attr("class", "legend-clickable")
             .attr("font-size", this.opts.legendSize)
             .attr("x", this.element.clientWidth - this.opts.legendWidth + 2*this.opts.legendSize)
             .attr("y", (d, i) => (i+1) * (this.opts.legendSize + 2))
