@@ -17,7 +17,7 @@
         </header>
 
         <div id="sidebar" class="d-flex flex-column p-2">
-            <div id="people" class="pb-3">
+            <div id="people" class="pb-2">
                 <h3>People</h3>
 
                 <div id="people-list" class="people-list pe-1">
@@ -25,7 +25,7 @@
                         <div class="student px-1 border d-flex justify-content-between">
                             <div class="name">${alias}</div>
                             <div>
-                                <i class="ps-1 bi bi-person-plus"></i>
+                                <i class="ps-1 bi bi-person-plus" title="Add to group"></i>
                             </div>
                         </div>
                     </template>
@@ -37,10 +37,10 @@
             <div id="details" class="col">
                 <h3 class="d-flex justify-content-between">
                     Details
-                    <i id="details-close-btn" class="bi bi-chevron-down align-self-center"></i>
+                    <i id="details-close-btn" title="Toggle details view" class="bi bi-chevron-down align-self-center"></i>
                 </h3>
 
-                <div id="details-data" class="details d-flex flex-column"></div>
+                <div class="details-data d-flex flex-column"></div>
             </div>
         </div>
 

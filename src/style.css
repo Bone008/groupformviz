@@ -15,7 +15,7 @@ html, body {
 #people {
   min-width: 200px;
   min-height: 200px;
-  flex: 1 1 auto;
+  flex: 1 4 auto;
   display: flex;
   flex-direction: column;
 }
@@ -29,8 +29,21 @@ html, body {
 }
 
 #details {
-  flex: 1 0 200px;
-  overflow: scroll
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 500px;
+  min-height: 30px;
+}
+
+#details.collapsed {
+  flex: 0 0 auto;
+}
+
+.details-data {
+  overflow: auto;
+}
+#details.collapsed .details-data {
+  display: none !important;
 }
 
 main {

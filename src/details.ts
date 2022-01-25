@@ -4,6 +4,9 @@ import { Student } from './util';
 
 /** Logic for the details panel showing data about a single selected student. */
 export class DetailsController {
+  private readonly toggleBtn = document.querySelector<HTMLElement>('#details-close-btn');
+
+  private isOpened = false;
 
   constructor(
     private readonly element: HTMLElement,
@@ -11,49 +14,46 @@ export class DetailsController {
   ) {
     console.log('DetailsController initialized with:', element);
 
+    this.setIsOpened(false);
     this.renderStudent(null);
-    this.appState.observeActive(st => {
-      this.renderStudent(st);
+    this.appState.observeActive(newActiveStudent => {
+      this.renderStudent(newActiveStudent);
+      this.setIsOpened(!!newActiveStudent);
     });
 
-    const toggle = <HTMLElement>document.querySelector('#details-close-btn');
-    const dataElt = <HTMLElement>document.querySelector("#details-data");
-    toggle.addEventListener('click', () => {
-      if (toggle.classList.contains("bi-chevron-down")){
-        toggle.classList.remove("bi-chevron-down")
-        toggle.classList.add("bi-chevron-up")
-
-        this.element.style.flexShrink = "1.7";
-        
-        this.element.style.flexBasis = "200px";
-        this.element.style.overflow = "hidden";
-        dataElt.style.visibility = "hidden";
-      } else if (toggle.classList.contains("bi-chevron-up")){
-        toggle.classList.add("bi-chevron-down")
-        toggle.classList.remove("bi-chevron-up")
-
-        this.element.style.flexShrink = "0";
-        this.element.style.flexBasis = "500px";
-        this.element.style.overflow = "scroll";
-        dataElt.style.visibility = "initial";
-      }
+    this.toggleBtn = document.querySelector<HTMLElement>('#details-close-btn');
+    this.toggleBtn.addEventListener('click', () => {
+      this.setIsOpened(!this.isOpened);
     });
   }
 
-  private renderStudent(student: Student|null) {
-    const container = d3.select("#details").select("div.details");
+  private setIsOpened(value: boolean) {
+    this.isOpened = value;
+    if (value) {
+      this.element.classList.remove('collapsed');
+      this.toggleBtn.classList.remove("bi-chevron-up");
+      this.toggleBtn.classList.add("bi-chevron-down");
+    } else {
+      this.element.classList.add('collapsed');
+      this.toggleBtn.classList.remove("bi-chevron-down");
+      this.toggleBtn.classList.add("bi-chevron-up");
+    }
+  }
+
+  private renderStudent(student: Student | null) {
+    const container = d3.select("#details").select(".details-data");
     container.selectAll("*").remove();
-    
+
     if (student === null) {
       const rows = container.append("p")
         .classed("m-auto fs-6 text-secondary", true)
         .text("No student inspected")
-      
+
       return;
     }
 
     const data = Object.entries(student);
-    
+
     const rows = container.selectAll("div")
       .data(data)
       .enter().append("div")

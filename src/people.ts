@@ -78,6 +78,7 @@ export class PeopleController {
     let button = elt.querySelector("i");
     button.classList.remove("bi-person-plus");
     button.classList.add("bi-person-dash");
+    button.title = 'Remove from group';
 
     // Add student to AppState
     this.appState.addSelectedStudent(student);
@@ -93,6 +94,7 @@ export class PeopleController {
     let button = elt.querySelector("i");
     button.classList.remove("bi-person-dash");
     button.classList.add("bi-person-plus");
+    button.title = 'Add to group';
 
     // Remove student from AppState
     this.appState.removeSelectedStudent(student);
