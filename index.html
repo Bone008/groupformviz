@@ -20,12 +20,33 @@
             <div id="people" class="pb-2">
                 <h3>People</h3>
 
+                <table id="people-options">
+                    <tr>
+                        <td class="text-secondary">Show skill:</td>
+                        <td>
+                            <select class="people-skill-selector w-100">
+                                <option value="" class="text-secondary">(none)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-secondary">Sort by:</td>
+                        <td>
+                            <select class="people-sort-selector w-100" disabled>
+                                <option value="alphabetically">A-Z</option>
+                                <option value="skill">Shown skill</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
                 <div id="people-list" class="people-list pe-1">
                     <template id="student-template">
                         <div class="student px-1 border d-flex justify-content-between">
                             <div class="name">${alias}</div>
                             <div>
-                                <i class="ps-1 bi bi-person-plus" title="Add to group"></i>
+                                <span class="skill-value"></span>
+                                <i class="toggle-group-button ps-1 bi bi-person-plus" title="Add to group"></i>
                             </div>
                         </div>
                     </template>
