@@ -14,6 +14,7 @@ interface HistogramResult {
   data: number[];
   median: number;
   mean: number;
+  sourceStudents: Student[];
 }
 
 /** Logic for the main visualization view */
@@ -132,7 +133,7 @@ export class VisualizationController {
           .attr('fill', color)
         )
         .call(g => g.append('title')
-          .text((d, i) => this.appState.students
+          .text((d, i) => histogram.sourceStudents
             .filter(student => student[this.selectedSkill] === i)
             .map(student => student.Alias)
             .sort()
@@ -191,6 +192,7 @@ export class VisualizationController {
       data,
       mean: d3.mean(values),
       median: d3.median(values),
+      sourceStudents: students,
     }
   }
 
