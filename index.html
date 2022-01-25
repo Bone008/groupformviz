@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>GroupFormViz</title>
+    <script defer src="main.js"></script></head>
+    
+    <body class="bg-light d-flex flex-column justify-content-between">
+        <header class="bg-white text-secondary container-fluid p-2 d-flex justify-content-between">
+            <h2>GroupFormViz</h2>
+            <a class="link-dark" href="https://github.com/Bone008/GroupFormViz" target="_blank">
+                <i title="Source Code" class="fs-2 bi bi-github align-self-center"></i>
+            </a>
+        </header>
+
+        <div id="sidebar" class="d-flex flex-column p-2">
+            <div id="people" class="pb-3">
+                <h3>People</h3>
+
+                <div id="people-list" class="people-list pe-1">
+                    <template id="student-template">
+                        <div class="student px-1 border d-flex justify-content-between">
+                            <div class="name">${alias}</div>
+                            <div>
+                                <i class="ps-1 bi bi-person-plus"></i>
+                            </div>
+                        </div>
+                    </template>
+
+                    <hr id="group-break" class="mt-2 mb-2">
+                </div>
+            </div>
+
+            <div id="details" class="col">
+                <h3 class="d-flex justify-content-between">
+                    Details
+                    <i id="details-close-btn" class="bi bi-chevron-down align-self-center"></i>
+                </h3>
+
+                <div id="details-data" class="details d-flex flex-column"></div>
+            </div>
+        </div>
+
+        <main class="p-2">
+            <div id="visuals" class="col flex-grow-3">
+                <h3>Visualizations</h3>
+
+                <div class="main-card">
+                    <svg class="radar" width="440" height="240">
+                        <g class="circularAxes"></g>
+                        <g class="radialAxes"></g>
+                        <g class="labels"></g>
+                        <g class="plots"></g>
+                        <g class="legend"></g>
+                    </svg>
+                </div>
+
+                <div class="main-card">
+                    <p>
+                        Skill:
+                        <select class="skill-selector">
+                        <option value="Computer">Computer usage</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Math">Maths</option>
+                        <option value="Statistics">Statistics</option>
+                        </select>
+                    </p>
+                    <svg class="vis-skills-histogram" width="440" height="240">
+                        <g class="chart" transform="translate(20,20)"></g>
+                    </svg>
+                    
+                </div>
+                <div class="main-card">
+                    <svg class="vis-word-cloud" width="440" height="440">
+                    </svg>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
