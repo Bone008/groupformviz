@@ -22,7 +22,7 @@ export class Radar {
         labelSize: 8,
 
         legendSize: 12,
-        legendWidth: 150,
+        legendWidth: 190,
 
         showIndividual: false,
         aggregateName: "Your Group Members",
@@ -175,7 +175,7 @@ export class Radar {
             .text(d => d)
             .attr("class", "legend-clickable")
             .attr("font-size", this.opts.legendSize)
-            .attr("x", this.element.clientWidth - this.opts.legendWidth + 2*this.opts.legendSize)
+            .attr("x", this.element.clientWidth - this.opts.legendWidth + 30 + 2*this.opts.legendSize)
             .attr("y", (d, i) => (i+1) * (this.opts.legendSize + 4))
             .attr("font-weight", d => {
                 if (d === this.opts.aggregateName) return "bold";
@@ -187,7 +187,7 @@ export class Radar {
             .data(legendData)
             .enter().append("circle")
             .attr("r", this.opts.legendSize / 3)
-            .attr("cx", this.element.clientWidth - this.opts.legendWidth + this.opts.legendSize)
+            .attr("cx", this.element.clientWidth - this.opts.legendWidth + 30 + this.opts.legendSize)
             .attr("cy", (d, i) => (i+1) * (this.opts.legendSize + 4) - this.opts.legendSize / 3)
             .attr("stroke-fill", "none")
             .attr("fill", d => legendColor(d))
