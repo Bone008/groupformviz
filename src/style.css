@@ -2,12 +2,15 @@ html, body {
   height: 100%;
 }
 
+main {
+  margin-left: 280px;
+}
 
 #sidebar {
   position: fixed;
   top: 60px;
   bottom: 0;
-  width: 250px;
+  width: 280px;
   border-right: 1px solid #eee;
   justify-content: stretch;
 }
@@ -24,7 +27,17 @@ html, body {
   font-size: 80%;
 }
 
-#people .skill-value {
+.people-category-label {
+  font-size: 80%;
+  font-weight: bold;
+}
+
+#hint-empty-group {
+  font-size: 80%;
+  font-style: italic;
+}
+
+.skill-value {
   font-weight: 600;
   color: #1a6441;
 }
@@ -35,6 +48,11 @@ html, body {
 
 #people-list {
   overflow-y: scroll;
+  margin-top: 0.25rem;
+}
+
+#people .toggle-group-button {
+  cursor: pointer;
 }
 
 #details {
@@ -48,15 +66,39 @@ html, body {
   flex: 0 0 auto;
 }
 
+#details.collapsed .details-no-data,
+#details:not(.no-data) .details-no-data {
+  display: none;
+}
+
 .details-data {
   overflow: auto;
+  margin: 0 -.5rem;
+  padding: 0 .5rem;
 }
-#details.collapsed .details-data {
+#details.collapsed .details-data,
+#details.no-data .details-data {
   display: none !important;
 }
 
-main {
-  margin-left: 250px;
+#details h4 {
+  font-size: 110%;
+  font-weight: 300;
+  color: #555;
+}
+
+#details .label {
+  font-weight: 600;
+}
+
+#details .freetext {
+  font-size: 91%;
+}
+
+#details .skill-table th,
+#details .skill-table td {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
 }
 
 .main-card {

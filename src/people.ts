@@ -7,6 +7,7 @@ type SortMode = 'alphabetically' | 'skill';
 export class PeopleController {
   private readonly listContainer: HTMLElement;
   private readonly groupBreak: HTMLElement;
+  private readonly hintEmptyGroup: HTMLElement;
 
   private readonly aliasToElementMap = new Map<string, HTMLElement>();
   private readonly aliasToStudentMap = new Map<string, Student>();
@@ -22,6 +23,7 @@ export class PeopleController {
 
     this.listContainer = element.querySelector("#people-list");
     this.groupBreak = element.querySelector("#group-break");
+    this.hintEmptyGroup = element.querySelector('#hint-empty-group');
 
     const sortSelector = element.querySelector<HTMLSelectElement>('.people-sort-selector');
     sortSelector.selectedIndex = 0;
@@ -110,6 +112,8 @@ export class PeopleController {
       const elt = this.getStudentElt(student);
       this.listContainer.appendChild(elt);
     }
+
+    this.hintEmptyGroup.style.display = sortedInGroup.length ? 'none' : 'block';
   }
 
   private createStudentElement(student: Student): HTMLElement {

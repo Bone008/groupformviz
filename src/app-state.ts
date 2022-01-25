@@ -21,8 +21,10 @@ export class AppState {
   private activeObservers: ObserverCallback<Student>[] = [];
 
   constructor() {
+    // Pre-processing
     this.students.forEach(student => {
       student.Alias = student.Alias.trim();
+      student.University = student.University || 'KTH';
     });
   }
 

@@ -41,26 +41,27 @@ export class DetailsController {
   }
 
   private renderStudent(student: Student | null) {
-    const container = d3.select("#details").select(".details-data");
-    container.selectAll("*").remove();
+    const container = this.element.querySelector('.details-data');
 
-    if (student === null) {
-      const rows = container.append("p")
-        .classed("m-auto fs-6 text-secondary", true)
-        .text("No student inspected")
-
+    if (!student) {
+      this.element.classList.add('no-data');
       return;
     }
+    this.element.classList.remove('no-data');
 
-    const data = Object.entries(student);
+    for (const [key, value] of Object.entries(student)) {
+      const dataElement = container.querySelector<HTMLElement>(`.data-${key}`);
+      if (!dataElement) {
+        continue;
+      }
 
-    const rows = container.selectAll("div")
-      .data(data)
-      .enter().append("div")
-
-    rows.append("p").classed("fs-6 fw-bold mb-0", true).text(d => d[0]);
-    rows.insert("p").classed("fs-6", true).text(d => {
-      return d[1] !== null ? d[1] : "-";
-    })
+      let formattedValue: string = String(value) || '-';
+      if (key === 'Graduation' && formattedValue.length > 4) {
+        dataElement.title = 'Expected graduation: ' + formattedValue;
+        // Extract year only
+        formattedValue = formattedValue.substring(formattedValue.length - 4);
+      }
+      dataElement.textContent = formattedValue;
+    }
   }
 }

@@ -20,7 +20,7 @@
             <div id="people" class="pb-2">
                 <h3>People</h3>
 
-                <table id="people-options">
+                <table id="people-options" class="pb-1">
                     <tr>
                         <td class="text-secondary">Show skill:</td>
                         <td>
@@ -51,17 +51,141 @@
                         </div>
                     </template>
 
-                    <hr id="group-break" class="mt-2 mb-2">
+                    <div class="text-secondary people-category-label">In your group:</div>
+                    <div id="hint-empty-group" class="text-secondary">
+                        Click <i class="bi bi-person-plus"></i> to add students to your group.
+                    </div>
+                    <div id="group-break">
+                        <hr id="group-break" class="mt-2 mb-2">
+                        <div class="text-secondary people-category-label">Others:</div>
+                    </div>
                 </div>
             </div>
 
-            <div id="details" class="col">
+            <div id="details" class="col no-data">
                 <h3 class="d-flex justify-content-between">
                     Details
                     <i id="details-close-btn" title="Toggle details view" class="bi bi-chevron-down align-self-center"></i>
                 </h3>
 
-                <div class="details-data d-flex flex-column"></div>
+                <div class="details-no-data m-auto fs-6 text-secondary">
+                    No student selected
+                </div>
+
+                <div class="details-data d-flex flex-column">
+                    <div class="mb-3">
+                        <span class="label">Student:</span>
+                        <span class="data-Alias">Watermelon</span>
+                    </div>
+                    <h4>University</h4>
+                    <div class="bg-white border p-2 mb-3">
+                        <div>
+                            <span class="data-University"></span>,
+                            <span class="data-DegreeStart" title="Start of university degree"></span>
+                            <span>-</span>
+                            <span class="data-Graduation" title="Expected graduation"></span>
+                        </div>
+                        <div>
+                            <span class="label">Major: </span>
+                            <span class="data-Major"></span>
+                        </div>
+                        <div>
+                            <span class="label">Degree: </span>
+                            <span class="data-Degree"></span>
+                        </div>
+                    </div>
+                    <h4>Skills</h4>
+                    <table class="skill-table table bg-white border mb-3">
+                        <tr>
+                            <th class="label">Art</th>
+                            <td class="skill-value data-Art"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Collaboration</th>
+                            <td class="skill-value data-Collaboration"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Communication</th>
+                            <td class="skill-value data-Communication"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Computer</th>
+                            <td class="skill-value data-Computer"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">ComputerGraphics</th>
+                            <td class="skill-value data-ComputerGraphics"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Hci</th>
+                            <td class="skill-value data-Hci"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Math</th>
+                            <td class="skill-value data-Math"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Programming</th>
+                            <td class="skill-value data-Programming"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Repository</th>
+                            <td class="skill-value data-Repository"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Statistics</th>
+                            <td class="skill-value data-Statistics"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">Ux</th>
+                            <td class="skill-value data-Ux"></td>
+                        </tr>
+                        <tr>
+                            <th class="label">VizSkills</th>
+                            <td class="skill-value data-VizSkills"></td>
+                        </tr>
+                    </table>
+
+                    <h4>Other</h4>
+                    <table class="table bg-white border mb-3">
+                        <tr>
+                            <td>
+                                <div class="label">Interests</div>
+                                <div class="freetext data-Interests"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="label">Expectations</div>
+                                <div class="freetext data-Expectations"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="label">Relevant completed courses</div>
+                                <div class="freetext data-RelevantCourses"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="label">Thesis status</div>
+                                <div class="freetext data-ThesisStatus"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="label">In 5 years</div>
+                                <div class="freetext data-FiveYears"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="label">Canvas usage</div>
+                                <div class="freetext data-Canvas"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
 
