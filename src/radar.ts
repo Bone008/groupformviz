@@ -83,6 +83,16 @@ export class Radar {
             .attr("y1", this.cy)
             .attr("x2", (d, i) => this.getPosOnCircle(i, this.radiusLimit)[0])
             .attr("y2", (d, i) => this.getPosOnCircle(i, this.radiusLimit)[1])
+
+        /* Draw axis with ticks */
+        const axisScale = d3.scaleLinear().domain([0, 10]).range([this.radiusLimit, 0])
+        const yAxis = d3.axisLeft(axisScale)
+
+        const axis = svg.append("g")
+            .attr("transform", "translate(" + [this.cx * 2, this.cy - this.radiusLimit] + ")")
+            .attr("class", "radar-axis")
+
+        axis.call(yAxis)
         
         /* Draw labels for radial axes */
         // Adjust for different shape types
