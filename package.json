@@ -4,7 +4,8 @@
   "description": "A tool for visualizing self-reported student data in order to assist with forming groups for project work.",
   "private": true,
   "scripts": {
-    "start": "webpack serve --open",
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build-dev": "webpack --config webpack.dev.js",
     "build": "webpack"
   },
   "repository": {
