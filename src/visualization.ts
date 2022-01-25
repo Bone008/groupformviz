@@ -103,6 +103,7 @@ export class VisualizationController {
     rawInterests.forEach((object: any) => {
       Object.entries(object).forEach(([key, value]) => {
         if(value) {
+          console.log(value)
           if(key in interests) {
             interests[key].push(value)
           } else {
@@ -111,6 +112,7 @@ export class VisualizationController {
         }
       });
     });
+
     let words = Object.keys(interests).map(word => {return {text: word, value: interests[word].length*300}});
 
     const height = 440;
@@ -124,15 +126,15 @@ export class VisualizationController {
       .on("end", (data: any, bounds: any) => this.draw(data, this.element, interests, height, length));
 
     layout.start()
+
+    this.appState.observeActive(student => this.checkActiveLabel(student));
   }
 
 
   private draw(words: any, element: HTMLElement, interests: any, height: number, length: number) {
     var fill = d3.scaleOrdinal(d3.schemeCategory10);
 
-    d3.select(element)
-        .select('.vis-word-cloud')
-        .append("g")
+    d3.select("#word-cloud")
         .attr("transform", "translate(" + height / 2 + "," + length / 2 + ")")
         .selectAll("text")
         .data(words)
@@ -144,17 +146,49 @@ export class VisualizationController {
         .style("fill", (d, i: any) => fill(i))
         .attr("text-anchor", "middle")
         .attr("transform", (d: any) => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-        .attr("id", (d, i) => words[i].text)
+        .attr("data-interest", (d, i) => words[i].text)
         .on("click", (event, d) => {
-          d3.select(element)
-            .select('.vis-word-cloud')
-            .select('#' + event.target.id)
+          d3.select(<HTMLElement>event.target)
             .attr('fill', 'black')
-          let aliases = interests[event.target.id]
-          aliases.forEach((alias: string) => {
-            let student = this.appState.students.find((student: Student) => student.Alias==alias)
-            // this.appState.addSelectedStudent(student)
-          });
+          let aliases = interests[event.target.dataset["interest"]]
+          this.labelInterestGroup(event.target.dataset["interest"], aliases, element);
         });
+  }
+
+  private labelInterestGroup (interest: string, aliases: string[], element: HTMLElement){
+    const list = d3.select("#interest-group");
+
+    list.selectAll("*").remove();
+    
+    list.append("text")
+      .text(interest)
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("x", 450)
+      .attr("y", 20);
+
+    list.append("g").selectAll("text")
+      .data(aliases)
+      .enter().append("text")
+      .text(d => d)
+      .attr("data-alias", d => d)
+      .attr("font-size", 12)
+      .attr("x", 450)
+      .attr("y", (d, i) => 25 + 12*(i+1))
+      .on("click", (evt, alias) => {
+        const student = this.appState.students.find(st => st.Alias === alias);
+        this.appState.setActiveStudent(student);
+      })
+  }
+
+  private checkActiveLabel (student: Student){
+    const list = document.querySelector("#interest-group g");
+    Array.from(list.children).forEach((elt: HTMLElement) => {
+      if (student && elt.dataset["alias"] === student.Alias){
+        elt.setAttribute("text-decoration", "underline");
+      } else {
+        elt.setAttribute("text-decoration", "none");
+      }
+    });
   }
 }

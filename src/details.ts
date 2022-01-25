@@ -44,7 +44,7 @@ export class DetailsController {
     const container = d3.select("#details").select(".details-data");
     container.selectAll("*").remove();
 
-    if (student === null) {
+    if (student == null) {
       const rows = container.append("p")
         .classed("m-auto fs-6 text-secondary", true)
         .text("No student inspected")
