@@ -110,6 +110,7 @@ main {
 
 .student {
   background-color: white;
+  cursor: pointer;
 }
 
 .student:not(.in-group).activeStudent {
@@ -130,5 +131,9 @@ main {
 }
 
 .legend-clickable {
+  cursor: pointer;
+}
+
+#details-close-btn {
   cursor: pointer;
 }
