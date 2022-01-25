@@ -2,6 +2,12 @@
 
 A tool for visualizing self-reported student data in order to
 assist with forming groups for project work.
+Built for the Information Visualization course at KTH Stockholm in spring 2022.
+
+[Open in Github Pages](https://bone008.github.io/groupformviz/)
+
+![image](https://user-images.githubusercontent.com/830913/151078178-72c6f70f-1db6-43f0-bf2b-0ec75f2cf10b.png)
+
 
 ## Setup
 
