@@ -151,3 +151,7 @@ main {
 #details-close-btn {
   cursor: pointer;
 }
+
+.radar-axis text {
+  background: purple;
+}
