@@ -189,11 +189,16 @@
             </div>
         </div>
 
-        <main class="p-2">
-            <div id="visuals" class="col flex-grow-3">
-                <h3>Visualizations</h3>
+        <main>
+            <div id="visuals" class="row flex-wrap">
+                <h3 class="p-2">Visualizations</h3>
 
                 <div class="main-card">
+                    <h5>Collective group skills</h5>
+                    <div class="text-secondary pb-2">
+                        This chart shows the maximum of each skill that is present in your group.<br>
+                        Click on student names to show a single person's skills.
+                    </div>
                     <svg class="radar" width="440" height="240">
                         <g class="circularAxes"></g>
                         <g class="radialAxes"></g>
@@ -204,18 +209,29 @@
                 </div>
 
                 <div class="main-card">
+                    <h5>Skill distribution</h5>
+                    <div class="text-secondary pb-2">
+                        Select a skill to view the histogram of answers.
+                        This allows getting a better feel for how significant large numbers
+                        are for a given skill.
+                    </div>
                     <p>
                         Skill:
                         <select class="skill-selector">
                             <option value="" disabled>Please select a skill ...</option>
                         </select>
                     </p>
-                    <svg class="vis-skills-histogram" width="440" height="240">
-                        <g class="chart" transform="translate(20,20)"></g>
+                    <svg class="vis-skills-histogram" width="440" height="255">
+                        <g class="chart" transform="translate(50,10)"></g>
                     </svg>
                     
                 </div>
                 <div class="main-card">
+                    <h5>Interests</h5>
+                    <div class="text-secondary pb-2">
+                        This word cloud shows what students are interested in.
+                        Click on an interest to see which students have used it in their response.
+                    </div>
                     <svg class="vis-word-cloud" width="600" height="440">
                         <g id="word-cloud"></g>
                         <g id="interest-group"></g>
