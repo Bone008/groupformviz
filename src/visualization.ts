@@ -272,6 +272,7 @@ export class VisualizationController {
       .attr("font-size", 12)
       .attr("x", 450)
       .attr("y", (d, i) => 25 + 15 * (i + 1))
+      .attr("text-decoration", d => this.appState.active?.Alias === d ? "underline" : "none")
       .on("click", (evt, alias) => {
         const student = this.appState.students.find(st => st.Alias === alias);
         this.appState.setActiveStudent(student);
@@ -280,6 +281,9 @@ export class VisualizationController {
 
   private checkActiveLabel(student: Student) {
     const list = document.querySelector("#interest-group g");
+    if (!list)
+      return;
+
     Array.from(list.children).forEach((elt: HTMLElement) => {
       if (student && elt.dataset["alias"] === student.Alias) {
         elt.setAttribute("text-decoration", "underline");
