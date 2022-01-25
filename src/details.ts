@@ -15,18 +15,28 @@ export class DetailsController {
       this.renderStudent(st);
     });
 
-    document.querySelector('#details-close-btn').addEventListener('click', () => {
-      this.closePanel();
+    const toggle = <HTMLElement>document.querySelector('#details-close-btn');
+    const dataElt = <HTMLElement>document.querySelector("#details-data");
+    toggle.addEventListener('click', () => {
+      if (toggle.classList.contains("bi-chevron-down")){
+        toggle.classList.remove("bi-chevron-down")
+        toggle.classList.add("bi-chevron-up")
+
+        this.element.style.flexShrink = "1.7";
+        
+        this.element.style.flexBasis = "200px";
+        this.element.style.overflow = "hidden";
+        dataElt.style.visibility = "hidden";
+      } else if (toggle.classList.contains("bi-chevron-up")){
+        toggle.classList.add("bi-chevron-down")
+        toggle.classList.remove("bi-chevron-up")
+
+        this.element.style.flexShrink = "0";
+        this.element.style.flexBasis = "500px";
+        this.element.style.overflow = "scroll";
+        dataElt.style.visibility = "initial";
+      }
     });
-  }
-
-  private closePanel() {
-    // Do not deselect, only hide panel.
-    this.element.classList.add('hidden');
-
-    // TODO: Close the data view but keep the heading "Details" viewable
-    // and move the open/close button to be inline with this heading
-    // so that the panel can be reopened but takes up much less space
   }
 
   private renderStudent(student: Student|null) {
