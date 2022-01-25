@@ -36,10 +36,11 @@ export type ObserverCallback<T> = (value: T) => void;
 export class AppState {
   readonly students: Student[] = Data
   public selected: Student[] = []
-  public hovered: Student
+  /** The student that is currently selected to be shown in the details view. */
+  public active: Student|null = null;
 
   private selectedObservers: ObserverCallback<Student[]>[] = [];
-  private hoveredObservers: ObserverCallback<Student>[] = []
+  private activeObservers: ObserverCallback<Student>[] = [];
 
   constructor () {
     this.students.forEach(student => {
@@ -49,13 +50,7 @@ export class AppState {
 
   addSelectedStudent(student: Student) {
     if (this.selected.includes(student)) { return }
-    
     this.selected.push(student);
-
-    if (this.hovered == student) {
-      this.hovered = null;
-    }
-
     this.notifySelected();
   }
 
@@ -68,26 +63,24 @@ export class AppState {
     }
     return false;
   }
-  
-  /** Adds a callback that is called whenever the array of selected students is changed. */
-  observeSelected(observer: ObserverCallback<Student[]>) {
-    this.selectedObservers.push(observer);
-  }
-
-  observeHovered(observer: ObserverCallback<Student>) {
-    this.hoveredObservers.push(observer);
-  }
 
   private notifySelected() {
     for (const observer of this.selectedObservers) {
       observer(this.selected);
     }
   }
+  
+  /** Adds a callback that is called whenever the array of selected students is changed. */
+  observeSelected(observer: ObserverCallback<Student[]>) {
+    this.selectedObservers.push(observer);
+  }
 
-  hoverStudent(student: Student){
-    if (this.selected.indexOf(student) != -1) { return }
+  observeActive(observer: ObserverCallback<Student>) {
+    this.activeObservers.push(observer);
+  }
 
-    this.hovered = student;
-    this.hoveredObservers.forEach(observer => observer(this.hovered));
+  setActiveStudent(newActive: Student|null) {
+    this.active = newActive;
+    this.activeObservers.forEach(observer => observer(this.active));
   }
 }

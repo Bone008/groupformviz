@@ -2,27 +2,69 @@ html, body {
   height: 100%;
 }
 
+
+#sidebar {
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  width: 250px;
+  border-right: 1px solid #eee;
+  justify-content: stretch;
+}
+
 #people {
   min-width: 200px;
+  min-height: 200px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 #people .in-group {
   background-color: #72b998;
 }
 
-.vis-word-cloud text {
-  cursor: pointer;
+#people-list {
+  overflow-y: scroll;
+}
+
+#details {
+  flex: 1 0 200px;
+  overflow: scroll
+}
+
+main {
+  margin-left: 250px;
+}
+
+.main-card {
+  padding: 8px;
+  border: 1px solid #dee2e6;
+  margin: 8px 0;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .student {
   background-color: white;
 }
 
-.student:not(.in-group):hover {
+.student:not(.in-group).activeStudent {
   background-color: beige; /* TODO: pick a better color */
 }
 
-#people-list {
-  overflow-y: scroll;
-  max-height: 200px; /* TODO: Fix this hack */
+.student.in-group.activeStudent {
+  background-color: beige !important;
+  border-color: #72b998 !important;
+}
+
+.vis-word-cloud text {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.legend-clickable {
+  cursor: pointer;
 }

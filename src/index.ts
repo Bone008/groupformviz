@@ -14,7 +14,7 @@ const DEBUG = true; // Can be pulled in from webpack env later.
 function init() {
   const appState = new AppState();
   const peopleController = new PeopleController(document.querySelector('#people'), appState);
-  const detailsController = new DetailsController(document.querySelector('#raw-data'), appState);
+  const detailsController = new DetailsController(document.querySelector('#details'), appState);
   const visualizationController = new VisualizationController(document.querySelector('#visuals'), appState);
 
   if(DEBUG) {
