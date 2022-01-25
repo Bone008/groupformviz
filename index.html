@@ -199,7 +199,7 @@
                         This chart shows the maximum of each skill that is present in your group.<br>
                         Click on student names to show a single person's skills.
                     </div>
-                    <svg class="radar" width="440" height="240">
+                    <svg class="radar" width="480" height="240">
                         <g class="circularAxes"></g>
                         <g class="radialAxes"></g>
                         <g class="labels"></g>
@@ -221,6 +221,26 @@
                             <option value="" disabled>Please select a skill ...</option>
                         </select>
                     </p>
+                    <div style="float: right; text-align: right;">
+                        <h5 class="mb-0">Global</h5>
+                        <div>
+                            <span class="text-secondary">Mean:</span>
+                            <span class="value-globalMean"></span>
+                        </div>
+                        <div>
+                            <span class="text-secondary">Median:</span>
+                            <span class="value-globalMedian"></span>
+                        </div>
+                        <h5 class="mb-0 mt-3">Your group</h5>
+                        <div>
+                            <span class="text-secondary">Mean:</span>
+                            <span class="value-groupMean"></span>
+                        </div>
+                        <div>
+                            <span class="text-secondary">Median:</span>
+                            <span class="value-groupMedian"></span>
+                        </div>
+                    </div>
                     <svg class="vis-skills-histogram" width="440" height="255">
                         <g class="chart" transform="translate(50,10)"></g>
                     </svg>
