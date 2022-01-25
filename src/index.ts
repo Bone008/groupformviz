@@ -3,8 +3,6 @@ import { DetailsController } from "./details";
 import { PeopleController } from "./people";
 import { VisualizationController } from "./visualization";
 
-import { Radar } from "./radar";
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './style.css';
@@ -17,7 +15,7 @@ function init() {
   const detailsController = new DetailsController(document.querySelector('#details'), appState);
   const visualizationController = new VisualizationController(document.querySelector('#visuals'), appState);
 
-  if(DEBUG) {
+  if (DEBUG) {
     // Declare globally to allow convenient access from dev tools.
     const win = <any>window;
     win.appState = appState;
@@ -30,9 +28,6 @@ function init() {
   appState.students.forEach(student => {
     peopleController.addStudent(student);
   });
-
-  // DEBUG
-  let radar = new Radar(document.querySelector(".radar"), appState, ["ComputerGraphics", "Statistics", "Hci", "Math", "Ux", "Art", "Computer", "VizSkills", "Programming"]);
 }
 
 document.addEventListener('DOMContentLoaded', init);

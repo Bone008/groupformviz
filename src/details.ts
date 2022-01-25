@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { AppState, Student } from "./app-state";
+import { AppState } from "./app-state";
+import { Student } from './util';
 
 /** Logic for the details panel showing data about a single selected student. */
 export class DetailsController {

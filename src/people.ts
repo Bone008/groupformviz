@@ -1,4 +1,5 @@
-import { AppState, Student } from "./app-state";
+import { AppState } from "./app-state";
+import { Student } from "./util";
 
 /** Logic for the people list on the left side of the UI. */
 export class PeopleController {

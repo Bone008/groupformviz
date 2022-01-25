@@ -1,12 +1,15 @@
 import * as d3 from 'd3';
 //@ts-ignore
 import * as d3Cloud from 'd3-cloud'
-import { AppState, Student } from './app-state';
+import { AppState } from './app-state';
+import { Radar } from './radar';
+import { populateSkillSelectElement, Student } from './util';
 //@ts-ignore
 import * as rawInterests from './interests.csv'
 
 /** Logic for the main visualization view */
 export class VisualizationController {
+  private readonly radarController: Radar;
   private selectedSkill: keyof Student;
 
   constructor(
@@ -14,8 +17,12 @@ export class VisualizationController {
     private readonly appState: AppState,
   ) {
     console.log('VisualizationController initialized with:', element);
+    
+    // Initialize radial chart.
+    this.radarController = new Radar(this.element.querySelector(".radar"), appState);
 
     const skillSelect = this.element.querySelector<HTMLSelectElement>('.skill-selector');
+    populateSkillSelectElement(skillSelect);
     skillSelect.addEventListener('change', e => {
       this.setSelectedSkill(skillSelect.value);
       this.renderHistogram();
@@ -24,14 +31,6 @@ export class VisualizationController {
     this.renderHistogram();
 
     this.renderWordCloud();
-    
-    // Proof-of-concept to run code whenever the selection changes.
-    const debugTextEl = document.createElement('p');
-    element.appendChild(debugTextEl);
-    this.appState.observeSelected(() => {
-      const names = this.appState.selected.map(s => s.Alias);
-      debugTextEl.textContent = `Selected from VisController: ${names.join(', ')}`;
-    });
   }
 
   private setSelectedSkill(newValue: string) {

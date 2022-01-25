@@ -1,48 +1,26 @@
 //@ts-ignore
 import * as Data from './responses.csv'
+import { Student } from './util';
 
-export interface Student {
-  Timestamp: string;
-  Alias: string;
-  University: String;
-  DegreeStart: number;
-  Graduation: string;
-  Major: string;
-  Degree: string;
-  Interests: string;
-  Expectations: string;
-  RelevantCourses: string;
-  Canvas: string;
-  VizSkills: number;
-  Statistics: number;
-  Math: number;
-  Art: number;
-  Computer: number;
-  Programming: number;
-  ComputerGraphics: number;
-  Hci: number;
-  Ux: number;
-  Communication: number;
-  Collaboration: number; 
-  Repository: number;
-  ThesisStatus: string;
-  FiveYears: string
-}
+export const ALL_SKILLS = [
+  'VizSkills', 'Statistics', 'Math', 'Art', 'Computer', 'Programming', 'ComputerGraphics', 'Hci', 'Ux', 'Communication', 'Collaboration', 'Repository',
+  "ComputerGraphics", "Statistics", "Hci", "Math", "Ux", "Art", "Computer", "VizSkills", "Programming"
+] as const;
 
 export type ObserverCallback<T> = (value: T) => void;
 
 
 /** Shared global state between all controllers. */
 export class AppState {
-  readonly students: Student[] = Data
-  public selected: Student[] = []
+  readonly students: Student[] = Data;
+  public selected: Student[] = [];
   /** The student that is currently selected to be shown in the details view. */
-  public active: Student|null = null;
+  public active: Student | null = null;
 
   private selectedObservers: ObserverCallback<Student[]>[] = [];
   private activeObservers: ObserverCallback<Student>[] = [];
 
-  constructor () {
+  constructor() {
     this.students.forEach(student => {
       student.Alias = student.Alias.trim();
     });
@@ -69,7 +47,7 @@ export class AppState {
       observer(this.selected);
     }
   }
-  
+
   /** Adds a callback that is called whenever the array of selected students is changed. */
   observeSelected(observer: ObserverCallback<Student[]>) {
     this.selectedObservers.push(observer);
@@ -79,7 +57,7 @@ export class AppState {
     this.activeObservers.push(observer);
   }
 
-  setActiveStudent(newActive: Student|null) {
+  setActiveStudent(newActive: Student | null) {
     this.active = newActive;
     this.activeObservers.forEach(observer => observer(this.active));
   }

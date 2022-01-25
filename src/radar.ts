@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { AppState, Student } from './app-state';
+import { AppState } from './app-state';
+import { RELEVANT_SKILLS, Student } from './util';
 
 export enum RadarShape {
     POLYGON,
@@ -11,6 +12,8 @@ export class Radar {
     private cy: number;
     private minDim: number;
     private color: d3.ScaleOrdinal<string, unknown>;
+
+    private readonly skills = RELEVANT_SKILLS;
 
     private opts = {
         padding: 25,
@@ -37,7 +40,6 @@ export class Radar {
     constructor (
         private readonly element: HTMLElement,
         private readonly appState: AppState,
-        private readonly skills: Array<keyof Student>,
         private readonly maxValue: number = 10,
     ) {
         this.cx = (element.clientWidth - this.opts.legendWidth) / 2;
