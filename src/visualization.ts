@@ -220,7 +220,12 @@ export class VisualizationController {
       .words(words)
       .font("sans-serif")
       .rotate(function () { return 0 })
-      .on("end", (data: any, bounds: any) => this.draw(data, this.element, interests, height, length));
+      .on("end", (data, bounds: any) => {
+        this.draw(data, this.element, interests, height, length);
+        this.appState.observeActive(() => {
+          this.draw(data, this.element, interests, height, length);
+        });
+      });
 
     layout.start()
 
@@ -228,8 +233,17 @@ export class VisualizationController {
   }
 
 
-  private draw(words: any, element: HTMLElement, interests: any, height: number, length: number) {
+  private draw(words: d3Cloud.Word[], element: HTMLElement, interests: any, height: number, length: number) {
     var fill = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const shouldHighlight = (value: string) => {
+      if (!this.appState.active)
+        return true;
+      console.log(value, interests[value]);
+      return interests[value].includes(this.appState.active.Alias);
+    };
+
+    d3.selectAll("#word-cloud text").remove();
 
     d3.select("#word-cloud")
       .attr("transform", "translate(" + height / 2 + "," + length / 2 + ")")
@@ -237,12 +251,14 @@ export class VisualizationController {
       .data(words)
       .enter()
       .append("text")
-      .text((d: any) => d.text)
-      .style("font-size", (d: any) => d.size + "px")
-      .style("font-family", (d: any) => d.font)
+      .text(d => d.text)
+      .style("font-size", d => d.size + "px")
+      .style("font-family", d => d.font)
       .style("fill", (d, i: any) => fill(i))
+      .style("filter", d => shouldHighlight(d.text) ? '' : 'grayscale(90%) opacity(50%)')
+      .style("text-decoration", d => this.appState.active && shouldHighlight(d.text) ? 'underline' : '')
       .attr("text-anchor", "middle")
-      .attr("transform", (d: any) => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+      .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
       .attr("data-interest", (d, i) => words[i].text)
       .on("click", (event, d) => {
         d3.select(<HTMLElement>event.target)
