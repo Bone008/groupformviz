@@ -114,6 +114,7 @@ main {
 }
 
 .main-card {
+  min-width: 600px;
   max-width: 600px;
   padding: 8px;
   border: 1px solid #dee2e6;
