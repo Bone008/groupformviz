@@ -2,11 +2,6 @@
 import * as Data from './responses.csv'
 import { Student } from './util';
 
-export const ALL_SKILLS = [
-  'VizSkills', 'Statistics', 'Math', 'Art', 'Computer', 'Programming', 'ComputerGraphics', 'Hci', 'Ux', 'Communication', 'Collaboration', 'Repository',
-  "ComputerGraphics", "Statistics", "Hci", "Math", "Ux", "Art", "Computer", "VizSkills", "Programming"
-] as const;
-
 export type ObserverCallback<T> = (value: T) => void;
 
 
